@@ -73,7 +73,7 @@ public class Controller {
     
     @FXML
     void allSubjectSearch() {
-    	
+    	textAreaConsole.setText("hi!I am here!");
     }
 
     @FXML
