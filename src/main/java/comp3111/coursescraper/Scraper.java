@@ -1,7 +1,10 @@
 package comp3111.coursescraper;
-
+import java.util.AbstractCollection;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Set;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomNode;
@@ -9,9 +12,11 @@ import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
+import javafx.scene.layout.AnchorPane;
+
 import com.gargoylesoftware.htmlunit.html.DomText;
 import java.util.Vector;
-
 
 /**
  * WebScraper provide a sample code that scrape web content. After it is constructed, you can call the method scrape with a keyword, 
@@ -87,7 +92,7 @@ public class Scraper {
 		client.getOptions().setJavaScriptEnabled(false);
 	}
 
-	private void addSlot(HtmlElement e, Course c, boolean secondRow) {
+	private void addSlot(HtmlElement e, Section sec, boolean secondRow) {
 		String times[] =  e.getChildNodes().get(secondRow ? 0 : 3).asText().split(" ");
 		String venue = e.getChildNodes().get(secondRow ? 1 : 4).asText();
 		if (times[0].equals("TBA"))
@@ -101,12 +106,36 @@ public class Scraper {
 			s.setStart(times[1]);
 			s.setEnd(times[3]);
 			s.setVenue(venue);
-			c.addSlot(s);	
+			sec.addSlot(s);	
 		}
 
 	}
 
-	public List<Course> scrape(String baseurl, String term, String sub) {
+	
+//	private boolean checkCourseCodeValid(String s) {
+//		if (s.length() != 8 && s.length() != 9) return false;
+//		for (Character c: s.substring(0, 4)) {
+//			
+//		}
+//		return true;
+//	}
+	
+	private boolean checkSectionCodeValid(String s) {
+		Character[] valid1 = {'A','0','1','2','3','4','5','6','7','8','9'};
+		Character[] valid2 = {'0','1','2','3','4','5','6','7','8','9'};
+		if (s.isEmpty()) return false;
+		if (s.charAt(0) != 'T' && s.charAt(0) != 'L') return false;
+		if (s.charAt(0) == 'L' && (!Arrays.asList(valid1).contains(s.charAt(1)))) return false;
+		if (s.charAt(0) == 'L') {
+			int i = (s.charAt(1) == 'A') ? 2 : 1;
+			for (; i < s.length() - 1; i++) {
+				if (!Arrays.asList(valid2).contains(s.charAt(i))) return false;
+			}
+		}
+		return true;
+	}
+
+	public Vector<AbstractCollection> scrape(String baseurl, String term, String sub) throws PageNotFoundError {
 
 		try {
 			
@@ -115,15 +144,16 @@ public class Scraper {
 			
 			List<?> items = (List<?>) page.getByXPath("//div[@class='course']");
 			
-			Vector<Course> result = new Vector<Course>();
-
+			Vector<Course> course = new Vector<Course>();
+			HashSet<Instructor> ins = new HashSet<Instructor>();
+			Vector<AbstractCollection> result = new Vector<AbstractCollection>();
 			for (int i = 0; i < items.size(); i++) {
 				Course c = new Course();
 				HtmlElement htmlItem = (HtmlElement) items.get(i);
 				
 				HtmlElement title = (HtmlElement) htmlItem.getFirstByXPath(".//h2");
+//				if (!checkCourseCodeValid(title.asText())) continue;
 				c.setTitle(title.asText());
-				
 				List<?> popupdetailslist = (List<?>) htmlItem.getByXPath(".//div[@class='popupdetail']/table/tbody/tr");
 				HtmlElement exclusion = null;
 				for ( HtmlElement e : (List<HtmlElement>)popupdetailslist) {
@@ -137,18 +167,61 @@ public class Scraper {
 				
 				List<?> sections = (List<?>) htmlItem.getByXPath(".//tr[contains(@class,'newsect')]");
 				for ( HtmlElement e: (List<HtmlElement>)sections) {
-					addSlot(e, c, false);
+					// create a new section and set basic information
+					Section sec = new Section();
+					String [] section_info = e.getChildNodes().get(1).asText().split(" ");
+					if (!checkSectionCodeValid(section_info[0])) {
+						System.out.println("INVALID SECTION CODE FOUND: " + section_info[0] + " of course " + c.getTitle());
+						continue;
+					}
+					sec.setcode(section_info[0]);
+					sec.setid(section_info[1]);
+					String insturctor_s = e.getChildNodes().get(5).asText();
+					if (insturctor_s.indexOf('\n') != -1) {
+						String [] instructors = insturctor_s.split("\n");
+						for (String s: instructors) {
+							boolean notexist = true; // should be unnecessary???
+							for (Instructor inst_hash: ins) {
+								if (inst_hash.getName() == s) notexist = false;
+							}
+							Instructor inst = new Instructor(s);
+							if (s != "TBA" && notexist) ins.add(inst);
+							sec.addInstructor(inst);
+						}
+					} else {
+						boolean notexist = true; // should be unnecessary???
+						for (Instructor inst_hash: ins) {
+							if (inst_hash.getName() == insturctor_s) notexist = false;
+						}
+						Instructor inst = new Instructor(insturctor_s);
+						if (insturctor_s != "TBA" && notexist) ins.add(inst);
+						sec.addInstructor(inst);
+					}
+					// creation of the new section finishes here
+					addSlot(e, sec, false);
 					e = (HtmlElement)e.getNextSibling();
 					if (e != null && !e.getAttribute("class").contains("newsect"))
-						addSlot(e, c, true);
+						addSlot(e, sec, true);
+					c.addSection(sec);
 				}
-				
-				result.add(c);
+				if (c.getNumSections() > 0) course.add(c);
 			}
 			client.close();
+			result.add(course);
+			result.add(ins);
 			return result;
 		} catch (Exception e) {
-			System.out.println(e);
+			String msg = e.getMessage();
+			if (msg.contains("404")) {
+				throw new PageNotFoundError("404");
+			} else {
+//				System.out.println(e.);
+				System.out.println(e);
+			     StackTraceElement[] arr = e.getStackTrace();
+			     for(int i=0; i<arr.length; i++){
+			       System.out.println(arr[i].toString());
+			     }
+			}
 		}
 		return null;
 	}
