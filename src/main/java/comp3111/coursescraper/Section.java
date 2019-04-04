@@ -1,5 +1,7 @@
 package comp3111.coursescraper;
 
+import java.util.ArrayList;
+
 public class Section {
 	private static final int DEFAULT_MAX_SLOT = 3;
 	private static final int DEFAULT_MAX_INS = 20;
@@ -7,18 +9,12 @@ public class Section {
 	private String courseName;
 	private String id; // 1809
 	private String code; //L1 LA1 T1
-	private Slot [] slots;
-	private int numSlots;
-	private Instructor [] instructors;
-	private int numInstructors;
+	private ArrayList<Slot> slots;
+	private ArrayList<Instructor> instructors;
 	
 	public Section() {
-		slots = new Slot[DEFAULT_MAX_SLOT];
-		for (int i = 0; i < DEFAULT_MAX_SLOT; i++) slots[i] = null;
-		numSlots = 0;
-		instructors = new Instructor[DEFAULT_MAX_INS];
-		for (int i = 0; i < DEFAULT_MAX_INS; i++) instructors[i] = null;
-		numInstructors = 0;
+		slots = new ArrayList<Slot>();
+		instructors = new ArrayList<Instructor>();
 	}
 	
 	@Override
@@ -26,10 +22,8 @@ public class Section {
 		Section s = new Section();
 		s.id = this.id;
 		s.code = this.code;
-		s.slots = this.slots.clone();
-		s.numSlots = this.numSlots;
-		s.instructors = this.instructors.clone();
-		s.numInstructors = this.numInstructors;
+		s.slots = (ArrayList<Slot>)this.slots.clone();
+		s.instructors = (ArrayList<Instructor>)this.instructors.clone();
 		s.courseCode = this.courseCode;
 		s.courseName = this.courseName;
 		return s;
@@ -47,20 +41,20 @@ public class Section {
 	}
 	
 	public void addSlot(Slot s) {
-		if (numSlots >= DEFAULT_MAX_SLOT)
+		if (getNumSlots() >= DEFAULT_MAX_SLOT)
 			return;
-		slots[numSlots++] = s.clone();
+		slots.add(s.clone());
 	}
 	public Slot getSlot(int i) {
-		if (i >= 0 && i < numSlots)
-			return slots[i];
+		if (i >= 0 && i < getNumSlots())
+			return slots.get(i);
 		return null;
 	}
 	public void addInstructor(Instructor i) {
-		instructors[numInstructors++] = i.clone();
+		instructors.add(i.clone());
 	}
-	public Instructor [] getInstructors() {
-		return instructors.clone(); // do we need clone???
+	public ArrayList<Instructor> getInstructors() {
+		return (ArrayList<Instructor>)instructors.clone(); // do we need clone???
 	}
 	/**
 	 * @return the id
@@ -92,14 +86,7 @@ public class Section {
 	 * @return the numSlots
 	 */
 	public int getNumSlots() {
-		return numSlots;
-	}
-
-	/**
-	 * @param numSlots the numSlots to set
-	 */
-	public void setNumSlots(int numSlots) {
-		this.numSlots = numSlots;
+		return slots.size();
 	}
 	public void setCourseCode(String s) {
 		courseCode = s;

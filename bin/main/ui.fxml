@@ -63,7 +63,7 @@
                               <CheckBox fx:id="filterTHU" layoutX="243.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectCourse" text="Thursday" />
                               <CheckBox fx:id="filterFRI" layoutX="243.0" layoutY="115.0" mnemonicParsing="false" onAction="#selectCourse" text="Friday" />
                               <CheckBox fx:id="filterSAT" layoutX="243.0" layoutY="132.0" mnemonicParsing="false" onAction="#selectCourse" text="Saturday" />
-                              <Button fx:id="filterSelectAll" layoutX="162.0" layoutY="14.0" mnemonicParsing="false" onAction="#selectAll" text="Select All" />
+                              <Button layoutX="162.0" layoutY="14.0" mnemonicParsing="false" text="Select All" />
                               <CheckBox fx:id="filterCCC" layoutX="360.0" layoutY="48.0" mnemonicParsing="false" onAction="#selectCourse" text="Common Core" />
                               <CheckBox fx:id="filterNOEx" layoutX="360.0" layoutY="65.0" mnemonicParsing="false" onAction="#selectCourse" text="No Exclusion" />
                               <CheckBox fx:id="filterTLA" layoutX="500.0" layoutY="48.0" mnemonicParsing="false" onAction="#selectCourse" text="With Labs or Tutorial" />
@@ -79,13 +79,13 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="318.0" prefWidth="719.0">
                            <children>
-                              <TableView prefHeight="281.0" prefWidth="719.0">
+                              <TableView fx:id="listTableView" prefHeight="281.0" prefWidth="719.0">
                                 <columns>
                                   <TableColumn prefWidth="91.0" text="Course Code" />
-                                    <TableColumn prefWidth="108.0" text="Lecture Section" />
-                                  <TableColumn prefWidth="271.0" text="Course Name" />
-                                    <TableColumn prefWidth="152.0" text="Instructor" />
-                                    <TableColumn prefWidth="96.0" text="Enroll" />
+                                    <TableColumn prefWidth="55.0" text="Section" />
+                                  <TableColumn prefWidth="354.0" text="Course Name" />
+                                    <TableColumn prefWidth="167.0" text="Instructor" />
+                                    <TableColumn prefWidth="51.0" text="Enroll" />
                                 </columns>
                               </TableView>
                               <Label layoutX="22.0" layoutY="281.0" text="*Fill the table according to the result of the Filter. If the Filter cannot be correctly implemented, show all result scrapped." />

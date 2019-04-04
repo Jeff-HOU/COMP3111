@@ -15,6 +15,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -22,10 +26,15 @@ import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import javafx.scene.Node;
+import javafx.collections.FXCollections;
+import javafx.util.Callback;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import java.util.Random;
 import java.util.Vector;
 import java.util.AbstractCollection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -90,6 +99,7 @@ public class Controller {
     		"#filterCCC", "#filterNOEx", "#filterTLA"
     		};
     private Vector<Section> selectedSection = new Vector<Section>();
+    private Vector<SectionsToList> enrolledSection = new Vector<SectionsToList>();
     
     @FXML
     void selectCourse() {
@@ -198,8 +208,71 @@ public class Controller {
     			textAreaConsole.appendText("\t" + sec.getSlot(i) + "\n");
     		}
     	}
+    	listCourse();
     }
     
+    
+    void listCourse() {
+    	AnchorPane ap = (AnchorPane)tabList.getContent();
+    	TableView tv = (TableView)ap.lookup("#listTableView");
+    	tv.setEditable(true);
+    	ArrayList<SectionsToList> sectionsToList = new ArrayList<SectionsToList>();
+    	sectionsToList.clear();
+    	for (Section sec: selectedSection) {
+    		sectionsToList.add(new SectionsToList(sec.getCourseCode(), sec.getcode(), sec.getCourseName(), sec.getInstructors(), false));
+    	}
+    	for (SectionsToList sectl: enrolledSection) {
+    		int idx = sectionsToList.indexOf(sectl);
+    		if (idx != -1) sectionsToList.remove(idx);
+    		sectionsToList.add(sectl.clone());
+    	}
+    	tv.setItems(FXCollections.observableArrayList(sectionsToList));
+    	for (Object o: tv.getColumns()) {
+    		TableColumn tc = (TableColumn) o;
+    		tc.setEditable(true);
+    		if (tc.getText().equals("Course Code")) {
+    			tc.setCellValueFactory(new PropertyValueFactory<>("courseCode"));
+    		} else if (tc.getText().equals("Section")) {
+    			tc.setCellValueFactory(new PropertyValueFactory<>("section"));
+    		} else if (tc.getText().equals("Course Name")) {
+    			tc.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+    		} else if (tc.getText().equals("Instructor")) {
+    			tc.setCellValueFactory(new PropertyValueFactory<>("courseCode"));
+    		} else { //if (tc.getText().equals("Checked")) 
+    			tc.setCellValueFactory(new PropertyValueFactory<>("checked"));
+    			tc.setCellFactory(
+    		            CheckBoxTableCell.forTableColumn(
+    		                    new Callback<Integer, ObservableValue<Boolean>>() {
+    		                        @Override
+    		                        public ObservableValue<Boolean> call(Integer param) {
+    		                        	SectionsToList sectl = sectionsToList.get(param);
+//    		                        	int idx = enrolledSection.indexOf(sectl);
+//    		                        	if (idx != -1) enrolledSection.remove(idx);
+//    		                        	else enrolledSection.add(sectl);
+    		                            return sectl.enrolledProperty();
+    		                        }
+    		                    }
+    		                )
+    		            );
+    		}
+    	}
+    	for (SectionsToList sectl: sectionsToList) {
+    		sectl.enrolledProperty().addListener(new ChangeListener<Boolean>() {
+    			@Override
+    			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+    				if (newValue) enrolledSection.add(sectl);
+    	    		else {
+    	    			int idx = enrolledSection.indexOf(sectl);
+    	    			if (idx != -1) enrolledSection.remove(idx);
+    	    		}
+    				System.out.println("enrolledSection:");
+    		    	for (SectionsToList sectl: enrolledSection) {
+    		    		System.out.println(sectl.getCourseCode() + " " + sectl.getSection());
+    		    	}
+        	    }
+    		});
+    	}
+    }
     
     @FXML
     void allSubjectSearch() {
