@@ -44,4 +44,5 @@ public class FxTest extends ApplicationTest {
 		sleep(1000);
 		assertTrue(b.isDisabled());
 	}
+	
 }

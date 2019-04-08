@@ -35,10 +35,12 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.net.UnknownHostException;
 public class Controller {
 
     @FXML
@@ -102,6 +104,26 @@ public class Controller {
     private Vector<SectionsToList> enrolledSection = new Vector<SectionsToList>();
     
     @FXML
+    void filterSelectAll() {
+    	AnchorPane ap = (AnchorPane)tabFilter.getContent();
+    	Button selectAllBtn = (Button)ap.lookup("#selectAll");
+    	if (selectAllBtn.getText().equals("Select All")) {
+    		selectAllBtn.setText("Unselect All");
+    		for (String filterName: filterCheckBoxName) {
+    			CheckBox filterCheckbox = (CheckBox) ap.lookup(filterName);
+    			filterCheckbox.setSelected(true);
+    		}
+    	} else {
+    		selectAllBtn.setText("Select All");
+    		for (String filterName: filterCheckBoxName) {
+    			CheckBox filterCheckbox = (CheckBox) ap.lookup(filterName);
+    			filterCheckbox.setSelected(false);
+    		}
+    	}
+    	selectCourse();
+    }
+    
+    @FXML
     void selectCourse() {
 //    	if (filterCheckBox.isEmpty()) {
 //    		for (String s: filterCheckBoxName) {
@@ -136,19 +158,28 @@ public class Controller {
     	Vector<Section> selectDay = new Vector<Section>();
     	for (Course c: course) {
 //    		System.out.println(c.getTitle());
-    		Vector<Section> selectDayForCourse = new Vector<Section>();
+    		Vector<Vector<Section>> selectDayForCourse = new Vector<Vector<Section>>();
     		for (int i = 0; i < Slot.DAYS.length; i++) {
     			if (filterCheckBox.get(filterCheckBoxName[i])) {
-//    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
+    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
     				if (c.getSectionsThatHaveSlotOnDay(i).isEmpty()) {
     					selectDayForCourse.clear();
     					break;
     				}
-    				if (selectDayForCourse.isEmpty()) selectDayForCourse.addAll(c.getSectionsThatHaveSlotOnDay(i));
-    				else selectDayForCourse.retainAll(c.getSectionsThatHaveSlotOnDay(i));
+    				selectDayForCourse.add(c.getSectionsThatHaveSlotOnDay(i));
     			}
     		}
-    		selectDay.addAll(selectDayForCourse);
+    		Vector<Section> selectDayForCourse_intersect;
+    		if (!selectDayForCourse.isEmpty()) {
+    			selectDayForCourse_intersect = selectDayForCourse.get(0);
+    			for (Vector<Section> vec_sec: selectDayForCourse) {
+    				selectDayForCourse_intersect.retainAll(vec_sec);
+    			}
+    			selectDay.addAll(selectDayForCourse_intersect);
+    			for (Section sec: selectDayForCourse_intersect) {
+        			System.out.println(sec);
+        		}
+    		}
     	}
 //    	System.out.println("hhssh2--\\|/" + selectDay.size());
 //    	for (Section sec: selectDay) {
@@ -212,21 +243,39 @@ public class Controller {
     }
     
     
-    void listCourse() {
+    void listCourse() { // a very important source: https://stackoverflow.com/questions/48590054/javafx-tableview-how-to-add-a-listener-to-checkbox-column
     	AnchorPane ap = (AnchorPane)tabList.getContent();
     	TableView tv = (TableView)ap.lookup("#listTableView");
     	tv.setEditable(true);
     	ArrayList<SectionsToList> sectionsToList = new ArrayList<SectionsToList>();
     	sectionsToList.clear();
+    	tv.setItems(FXCollections.observableArrayList(sectionsToList));
     	for (Section sec: selectedSection) {
+//    		SectionsToList sectl_new = new SectionsToList(sec.getCourseCode(), sec.getcode(), sec.getCourseName(), sec.getInstructors(), false);
+//    		for (SectionsToList sectl: sectionsToList) {
+//    			if (!sectl.equals(sectl_new))
+//    				sectionsToList.add(sectl_new);
+//    		}
     		sectionsToList.add(new SectionsToList(sec.getCourseCode(), sec.getcode(), sec.getCourseName(), sec.getInstructors(), false));
     	}
+    	System.out.print("sectionsToList.size() "+sectionsToList.size() + " ");
     	for (SectionsToList sectl: enrolledSection) {
-    		int idx = sectionsToList.indexOf(sectl);
-    		if (idx != -1) sectionsToList.remove(idx);
+    		for (int i = 0; i < sectionsToList.size(); i++) {
+    			if (sectionsToList.get(i).equals(sectl)) {
+    				System.out.print(i + " ");
+    				sectionsToList.remove(i);
+    				break;
+    			}
+    		}
+//    		int idx = sectionsToList.indexOf(sectl);
+//    		if (idx != -1) sectionsToList.remove(idx);
     		sectionsToList.add(sectl.clone());
     	}
+    	System.out.println(sectionsToList.size());
+    	Collections.sort(sectionsToList, new SortSectionsToList());
     	tv.setItems(FXCollections.observableArrayList(sectionsToList));
+    	tv.refresh();
+    	
     	for (Object o: tv.getColumns()) {
     		TableColumn tc = (TableColumn) o;
     		tc.setEditable(true);
@@ -237,7 +286,7 @@ public class Controller {
     		} else if (tc.getText().equals("Course Name")) {
     			tc.setCellValueFactory(new PropertyValueFactory<>("courseName"));
     		} else if (tc.getText().equals("Instructor")) {
-    			tc.setCellValueFactory(new PropertyValueFactory<>("courseCode"));
+    			tc.setCellValueFactory(new PropertyValueFactory<>("instructor"));
     		} else { //if (tc.getText().equals("Checked")) 
     			tc.setCellValueFactory(new PropertyValueFactory<>("checked"));
     			tc.setCellFactory(
@@ -245,7 +294,7 @@ public class Controller {
     		                    new Callback<Integer, ObservableValue<Boolean>>() {
     		                        @Override
     		                        public ObservableValue<Boolean> call(Integer param) {
-    		                        	SectionsToList sectl = sectionsToList.get(param);
+    		                        	SectionsToList sectl = sectionsToList.get(param); // what does the param represent??? if no value in the table???
 //    		                        	int idx = enrolledSection.indexOf(sectl);
 //    		                        	if (idx != -1) enrolledSection.remove(idx);
 //    		                        	else enrolledSection.add(sectl);
@@ -262,8 +311,15 @@ public class Controller {
     			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
     				if (newValue) enrolledSection.add(sectl);
     	    		else {
-    	    			int idx = enrolledSection.indexOf(sectl);
-    	    			if (idx != -1) enrolledSection.remove(idx);
+//    	    			int idx = enrolledSection.indexOf(sectl);
+//    	    			if (idx != -1) enrolledSection.remove(idx);
+    	    			for (int i = 0; i < enrolledSection.size(); i++) {
+    	        			if (enrolledSection.get(i).equals(sectl)) {
+    	        				System.out.print(i + " ");
+    	        				enrolledSection.remove(i);
+    	        				break;
+    	        			}
+    	        		}
     	    		}
     				System.out.println("enrolledSection:");
     		    	for (SectionsToList sectl: enrolledSection) {
@@ -361,6 +417,8 @@ public class Controller {
         	randomLabel.setMaxHeight(60);
         
         	ap.getChildren().addAll(randomLabel);
+        	AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
+        	ap_tabstat.getChildren().clear();
     	} catch (Exception e) {
     		if (e instanceof PageNotFoundError) {
     			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
@@ -371,6 +429,8 @@ public class Controller {
     		} else if (e instanceof TermNotValidError) {
     			textAreaConsole.setText("Term you entered: \n\t" + e.getMessage() + "\nis invalid");
     		} else if (e instanceof SubjectNotValidError) {
+    			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
+    		} else if (e instanceof UnknownHostException) {
     			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
     		}
     		

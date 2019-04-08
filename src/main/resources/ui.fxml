@@ -63,7 +63,7 @@
                               <CheckBox fx:id="filterTHU" layoutX="243.0" layoutY="98.0" mnemonicParsing="false" onAction="#selectCourse" text="Thursday" />
                               <CheckBox fx:id="filterFRI" layoutX="243.0" layoutY="115.0" mnemonicParsing="false" onAction="#selectCourse" text="Friday" />
                               <CheckBox fx:id="filterSAT" layoutX="243.0" layoutY="132.0" mnemonicParsing="false" onAction="#selectCourse" text="Saturday" />
-                              <Button layoutX="162.0" layoutY="14.0" mnemonicParsing="false" text="Select All" />
+                              <Button fx:id="selectAll" layoutX="162.0" layoutY="14.0" mnemonicParsing="false" onAction="#filterSelectAll" text="Select All" />
                               <CheckBox fx:id="filterCCC" layoutX="360.0" layoutY="48.0" mnemonicParsing="false" onAction="#selectCourse" text="Common Core" />
                               <CheckBox fx:id="filterNOEx" layoutX="360.0" layoutY="65.0" mnemonicParsing="false" onAction="#selectCourse" text="No Exclusion" />
                               <CheckBox fx:id="filterTLA" layoutX="500.0" layoutY="48.0" mnemonicParsing="false" onAction="#selectCourse" text="With Labs or Tutorial" />

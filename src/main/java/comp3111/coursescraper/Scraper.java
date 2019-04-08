@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.net.URLEncoder;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Set;
 
@@ -166,7 +167,7 @@ public class Scraper {
 		return false;
 	}
 
-	public Vector<AbstractCollection> scrape(String baseurl, String term, String sub) throws PageNotFoundError, UrlNotValidError, TermNotValidError, SubjectNotValidError {
+	public Vector<AbstractCollection> scrape(String baseurl, String term, String sub) throws PageNotFoundError, UrlNotValidError, TermNotValidError, SubjectNotValidError, UnknownHostException {
 
 		try {
 			if (!isValidUrl(baseurl)) throw new UrlNotValidError(baseurl);
@@ -260,6 +261,8 @@ public class Scraper {
 				throw new TermNotValidError(e.getMessage());
 			} else if (e instanceof SubjectNotValidError) {
 				throw new SubjectNotValidError(e.getMessage());
+			} else if (e instanceof UnknownHostException) {
+				throw new UnknownHostException(e.getMessage());
 			}
 			String msg = e.getMessage();
 			if (msg.contains("404")) {

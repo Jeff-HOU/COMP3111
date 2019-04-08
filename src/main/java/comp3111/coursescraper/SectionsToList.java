@@ -1,6 +1,8 @@
 package comp3111.coursescraper;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+
 import javafx.scene.control.CheckBox;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -42,7 +44,7 @@ public class SectionsToList {
 		return s;
 	}
 	public boolean equals(SectionsToList sectl) {
-		if (courseCode.equals(sectl.courseCode) && section.equals(sectl.section)) return true;
+		if (courseCode.get().equals(sectl.getCourseCode()) && section.get().equals(sectl.getSection())) return true;
 		return false;
 	}
 	public String getCourseCode() {
@@ -91,3 +93,17 @@ public class SectionsToList {
 		return enrolled;
 	}
 }
+
+class SortSectionsToList implements Comparator<SectionsToList> 
+{ 
+    // Used for sorting in ascending order of 
+    // roll number 
+    public int compare(SectionsToList a, SectionsToList b) 
+    { 
+        if (a.getCourseCode().equals(b.getCourseCode())) {
+        	return a.getSection().compareTo(b.getSection());
+        } else {
+        	return a.getCourseCode().compareTo(b.getCourseCode());
+        }
+    } 
+} 
