@@ -129,9 +129,12 @@ public class Controller {
     	{ 
     		for(Section s:AMPM) {
 
-    		if(c.hasSection(s))
-    		selectAMPM.addAll(c.getAllSections());
-    	}
+	    		if(c.hasSection(s))
+	    		{
+	    			selectAMPM.addAll(c.getAllSections());
+	    			break;
+	    		}
+    		}
     	
     	}
 
@@ -166,7 +169,10 @@ public class Controller {
     		for(Section s:Day)
     		{
     			if(c.hasSection(s))
+    			{
     				selectDay.addAll(c.getAllSections());
+    				break;
+    			}
     		}
     	}
 //    	Vector<Section> selectDay = new Vector<Section>();
