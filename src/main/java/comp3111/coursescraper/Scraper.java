@@ -3,6 +3,7 @@ import java.util.AbstractCollection;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.net.URLEncoder;
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
@@ -135,9 +136,46 @@ public class Scraper {
 		return true;
 	}
 
-	public Vector<AbstractCollection> scrape(String baseurl, String term, String sub) throws PageNotFoundError {
+	private static boolean isValidUrl(String url) { 
+        /* Try creating a valid URL */
+        try { 
+            new URL(url).toURI(); 
+            return true; 
+        } catch (Exception e) { 
+            return false; 
+        }
+    }
+
+ 	private static boolean isValidTerm(String term) {
+		Character[] thirdPosition = {'1', '2', '3', '4'};
+		if (term.length() != 4) return false;
+		if (!Arrays.asList(thirdPosition).contains(term.charAt(2))) return false;
+		if (term.charAt(3) != '0') return false;
+		return true;
+	}
+
+ 	private static boolean isValidSubject(String subject) {
+		if (subject.length() != 4) return false;
+		if (!subject.matches("[A-Z]*")) return false;
+		return true;
+	}
+
+ 	private boolean hasTorLA(String s) {
+		if (s.charAt(0) == 'T') return true;
+		if (s.charAt(0) == 'L' && s.charAt(1) == 'A') return true;
+		return false;
+	}
+
+
+	
+	
+	
+	public Vector<AbstractCollection> scrape(String baseurl, String term, String sub) throws PageNotFoundError,UrlNotValidError, TermNotValidError, SubjectNotValidError {
 
 		try {
+			if (!isValidUrl(baseurl)) throw new UrlNotValidError(baseurl);
+			if (!isValidTerm(term)) throw new TermNotValidError(term);
+			if (!isValidSubject(sub)) throw new SubjectNotValidError(sub);
 			
 			HtmlPage page = client.getPage(baseurl + "/" + term + "/subject/" + sub);
 
@@ -164,7 +202,11 @@ public class Scraper {
 					}
 				}
 				c.setExclusion((exclusion == null ? "null" : exclusion.asText()));
-				
+				List<?> crseattrwordlist = (List<?>) htmlItem.getByXPath(".//span[@class='crseattrword']");
+				for (HtmlElement e: (List<HtmlElement>)crseattrwordlist) {
+					if (e.asText().equals("[4Y]")) c.setcc4y(true);
+				}
+//				if (c.getcc4y()) System.out.println(c.getTitle());
 				List<?> sections = (List<?>) htmlItem.getByXPath(".//tr[contains(@class,'newsect')]");
 				for ( HtmlElement e: (List<HtmlElement>)sections) {
 					// create a new section and set basic information
@@ -174,8 +216,14 @@ public class Scraper {
 						System.out.println("INVALID SECTION CODE FOUND: " + section_info[0] + " of course " + c.getTitle());
 						continue;
 					}
+					if (c.gettla() == false && hasTorLA(section_info[0])) {
+						//System.out.println(c.getTitle() + " " + sec.getcode() + " " + section_info[0]);
+						c.settla(true);
+					}
+					sec.setCourseCode(title.asText().split(" - ")[0]);
+					sec.setCourseName(title.asText().split(" - ")[1].split(" \\(")[0]);
 					sec.setcode(section_info[0]);
-					sec.setid(section_info[1]);
+					sec.setid(section_info[1].substring(1,5));
 					String insturctor_s = e.getChildNodes().get(5).asText();
 					if (insturctor_s.indexOf('\n') != -1) {
 						String [] instructors = insturctor_s.split("\n");
@@ -211,6 +259,13 @@ public class Scraper {
 			result.add(ins);
 			return result;
 		} catch (Exception e) {
+			if (e instanceof UrlNotValidError) {
+				throw new UrlNotValidError(e.getMessage());
+			} else if (e instanceof TermNotValidError) {
+				throw new TermNotValidError(e.getMessage());
+			} else if (e instanceof SubjectNotValidError) {
+				throw new SubjectNotValidError(e.getMessage());
+			}
 			String msg = e.getMessage();
 			if (msg.contains("404")) {
 				throw new PageNotFoundError("404");

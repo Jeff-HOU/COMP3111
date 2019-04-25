@@ -209,7 +209,23 @@ public class Controller {
     
     
     
-    
+    void selectAll() {
+    	AnchorPane ap = (AnchorPane)tabFilter.getContent();
+    	ObservableList<Node> nodes = ap.getChildren();
+    	Button b = (Button) ap.lookup("#filterSelectAll");
+    	if (b.getText().equals("Select All")) {
+    		b.setText("De-select All");
+    		for (Node node: nodes) {
+    			if (node instanceof CheckBox) ((CheckBox)node).setSelected(true);
+    		}
+    	} else {
+    		b.setText("Select All");
+    		for (Node node: nodes) {
+    			if (node instanceof CheckBox) ((CheckBox)node).setSelected(false);
+    		}
+    	}
+    	selectCourse();
+    }
     
     
     @FXML
@@ -230,13 +246,14 @@ public class Controller {
     @FXML
     void search() {
     	try {
+    		textAreaConsole.setText("");
     		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),textfieldSubject.getText());
-    		Vector<Course> v = (Vector<Course>) vec.get(0);
-    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
+    		course.clear();
+    		course.addAll((Vector<Course>) vec.get(0));    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
     		int allNumSections = 0;
     		LocalTime TU310 = LocalTime.parse("03:10PM", DateTimeFormatter.ofPattern("hh:mma", Locale.US));
     		HashSet<Instructor> ins_tu310 = (HashSet<Instructor>)ins.clone(); //???
-    		for (Course c : v) {
+    		for (Course c : course) {
     			allNumSections += c.getNumSections();
         		String newline = c.getTitle() + "\n";
         		for (int i = 0; i < c.getNumSections(); i++) {
@@ -256,7 +273,7 @@ public class Controller {
         	
     		String searchInfo = "";
     		searchInfo += "Total Number of difference sections in this search: " + allNumSections + "\n";
-    		searchInfo += "Total Number of Course in this search: " + v.size() + "\n";
+    		searchInfo += "Total Number of Course in this search: " + course.size() + "\n";
     		searchInfo += "Instructors who has teaching assignment this term but does not need to teach at Tu 3:10pm:\n";
     		for (Instructor inst: ins_tu310) {
     			searchInfo += inst + "\n"; // 说好的不会重复呢？？？
@@ -278,11 +295,23 @@ public class Controller {
         	randomLabel.setMaxHeight(60);
         
         	ap.getChildren().addAll(randomLabel);
-    	} catch (PageNotFoundError e) {
-    		AnchorPane ap = (AnchorPane)tabStatistic.getContent();
-    		Label msg = new Label("404 NOT FOUND");
-    		ap.getChildren().add(msg);
+    	} catch (Exception e) {
+    		if (e instanceof PageNotFoundError) {
+    			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
+    			Label msg = new Label("404 NOT FOUND");
+    			ap.getChildren().add(msg);
+    			
+    		}else if (e instanceof UrlNotValidError) {
+    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+    		} else if (e instanceof TermNotValidError) {
+    			textAreaConsole.setText("Term you entered: \n\t" + e.getMessage() + "\nis invalid");
+    		} else if (e instanceof SubjectNotValidError) {
+    			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
+    		}
+
     	}
+    	
+    	
     	
     }
 

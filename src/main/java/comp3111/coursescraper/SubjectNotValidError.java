@@ -1,6 +1,6 @@
 package comp3111.coursescraper;
 
-public class SubjectNotValidError {
+public class SubjectNotValidError extends Exception {
 	/**
 	 * 
 	 */

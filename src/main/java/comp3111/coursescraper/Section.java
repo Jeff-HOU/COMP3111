@@ -30,6 +30,8 @@ public class Section {
 		s.numSlots = this.numSlots;
 		s.instructors = this.instructors.clone();
 		s.numInstructors = this.numInstructors;
+		s.courseCode = this.courseCode;
+		s.courseName = this.courseName;
 		return s;
 	}
 	public boolean equals(Section sec) {
