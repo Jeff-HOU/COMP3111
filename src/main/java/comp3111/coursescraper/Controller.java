@@ -123,24 +123,51 @@ public class Controller {
     			}
     		}
     	}
-//    	System.out.println("hhssh1" + selectAMPM.size());
+
     	Vector<Section> selectDay = new Vector<Section>();
     	for (Course c: course) {
 //    		System.out.println(c.getTitle());
     		Vector<Section> selectDayForCourse = new Vector<Section>();
+    		int count=0;
     		for (int i = 0; i < Slot.DAYS.length; i++) {
     			if (filterCheckBox.get(filterCheckBoxName[i])) {
+    				count++;
 //    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
     				if (c.getSectionsThatHaveSlotOnDay(i).isEmpty()) {
     					selectDayForCourse.clear();
     					break;
     				}
-    				if (selectDayForCourse.isEmpty()) selectDayForCourse.addAll(c.getSectionsThatHaveSlotOnDay(i));
+    				if (count==1) selectDayForCourse.addAll(c.getSectionsThatHaveSlotOnDay(i));
     				else selectDayForCourse.retainAll(c.getSectionsThatHaveSlotOnDay(i));
     			}
     		}
     		selectDay.addAll(selectDayForCourse);
     	}
+//    	Vector<Section> selectDay = new Vector<Section>();
+//    	Vector<Section> selectDayForCourses = new Vector<Section>();
+//    	for (Course c:course)
+//    	{
+//    		for (int i = 0; i < c.getNumSections(); i++) {
+//				selectDayForCourses.add(c.getSection(i));
+//			}
+//    		
+//    	}
+//    	System.out.println("hhssh2--\\|/" + selectDayForCourses.size());
+//    	for (Course c: course) {
+////    		System.out.println(c.getTitle());
+//    		
+//    		for (int i = 0; i < Slot.DAYS.length; i++) {
+//    			if (filterCheckBox.get(filterCheckBoxName[i])) {
+////    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
+//    				
+//     				selectDayForCourses.retainAll(c.getSectionsThatHaveSlotOnDay(i));
+//     				System.out.println("hhssh2--\\|/" +i+ "a"+selectDay.size());
+//    			}
+//    			else System.out.println("ass"+i);
+//    		}
+//    		selectDay.addAll(selectDayForCourses);
+//    	}
+//    	
 //    	System.out.println("hhssh2--\\|/" + selectDay.size());
 //    	for (Section sec: selectDay) {
 //    		System.out.println(sec.getid());
@@ -178,7 +205,7 @@ public class Controller {
     	}
     	selectedSection.clear();
     	selectedSection.addAll((Vector<Section>)selectAMPM.clone());// selectAMPM.clear();
-    	boolean tmp_selectday = filterCheckBox.get("#filterMON") || filterCheckBox.get("#filterTUE") || filterCheckBox.get("#filterWED") || filterCheckBox.get("#filterTHU") || filterCheckBox.get("#filterFRI");
+    	boolean tmp_selectday = filterCheckBox.get("#filterMON")||filterCheckBox.get("#filterTUE") ||filterCheckBox.get("#filterWED") ||filterCheckBox.get("#filterTHU") ||filterCheckBox.get("#filterFRI");
     	if (tmp_selectday)  selectedSection.retainAll((Vector<Section>)selectDay.clone());// selectDay.clear();
     	if (filterCheckBox.get("#filterCCC"))  selectedSection.retainAll((Vector<Section>)selectCCC.clone());// selectCCC.clear();
     	if (filterCheckBox.get("#filterNOEx")) selectedSection.retainAll((Vector<Section>)selectNOEx.clone());// selectNOEx.clear();
