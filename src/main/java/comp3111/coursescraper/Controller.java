@@ -136,7 +136,7 @@ public class Controller {
     	}
 
 
-    	Vector<Section> selectDay = new Vector<Section>();
+    	Vector<Section> Day = new Vector<Section>();
     	for (Course c: course) {
 //    		System.out.println(c.getTitle());
     		Vector<Section> selectDayForCourse = new Vector<Section>();
@@ -158,7 +158,16 @@ public class Controller {
     				else selectDayForCourse.retainAll(c.getSectionsThatHaveSlotOnDay(i));
     			}
     		}
-    		selectDay.addAll(selectDayForCourse);
+    		Day.addAll(selectDayForCourse);
+    	}
+    	Vector<Section> selectDay = new Vector<Section>();
+    	for(Course c:course)
+    	{
+    		for(Section s:Day)
+    		{
+    			if(c.hasSection(s))
+    				selectDay.addAll(c.getAllSections());
+    		}
     	}
 //    	Vector<Section> selectDay = new Vector<Section>();
 //    	Vector<Section> selectDayForCourses = new Vector<Section>();
