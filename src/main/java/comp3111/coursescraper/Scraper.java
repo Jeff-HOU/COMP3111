@@ -170,7 +170,7 @@ public class Scraper {
 	
 	
 	
-	public Vector<AbstractCollection> scrape(String baseurl, String term, String sub) throws PageNotFoundError,UrlNotValidError, TermNotValidError, SubjectNotValidError {
+	public Vector<AbstractCollection> scrape(String baseurl, String term, String sub) throws PageNotFoundError, UrlNotValidError, TermNotValidError, SubjectNotValidError {
 
 		try {
 			if (!isValidUrl(baseurl)) throw new UrlNotValidError(baseurl);
