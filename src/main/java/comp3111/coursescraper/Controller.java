@@ -103,26 +103,38 @@ public class Controller {
     	for (String s: filterCheckBoxName) {
     		filterCheckBox.put(s, ((CheckBox) ap.lookup(s)).isSelected());
     	}
-    	Vector<Section> selectAMPM = new Vector<Section>();
+    	Vector<Section> AMPM = new Vector<Section>();
     	if (filterCheckBox.get("#filterAM") && filterCheckBox.get("#filterPM")) {
     		for (Course c: course) {
-    			selectAMPM.addAll(c.getSectionsThatHaveAMandPMSlots());
+    			AMPM.addAll(c.getSectionsThatHaveAMandPMSlots());
     		}
     	} else if (filterCheckBox.get("#filterAM") && !(filterCheckBox.get("#filterPM"))) {
     		for (Course c: course) {
-    			selectAMPM.addAll(c.getSectionsThatHaveAMSlots());
+    			AMPM.addAll(c.getSectionsThatHaveAMSlots());
     		}
     	} else if (!(filterCheckBox.get("#filterAM")) && filterCheckBox.get("#filterPM")) {
     		for (Course c: course) {
-    			selectAMPM.addAll(c.getSectionsThatHavePMSlots());
+    			AMPM.addAll(c.getSectionsThatHavePMSlots());
     		}
     	} else {
     		for (Course c: course) {
     			for (int i = 0; i < c.getNumSections(); i++) {
-    				selectAMPM.add(c.getSection(i));
+    				AMPM.add(c.getSection(i));
     			}
     		}
     	}
+    	Vector<Section> selectAMPM = new Vector<Section>();
+
+    	for(Course c:course)
+    	{ 
+    		for(Section s:AMPM) {
+
+    		if(c.hasSection(s))
+    		selectAMPM.addAll(c.getAllSections());
+    	}
+    	
+    	}
+
 
     	Vector<Section> selectDay = new Vector<Section>();
     	for (Course c: course) {

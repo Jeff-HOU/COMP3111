@@ -18,7 +18,17 @@ public class Course {
 		tla = false;
 		noexclusion = false;
 	}
-	
+	public boolean hasSection(Section s)
+	{
+	for(Section sec:sections)
+	{
+	if (sec.getcode()==s.getcode()&&sec.getCourseCode()==s.getCourseCode())
+	{
+	return true;
+	}
+	}
+	return false;
+	}
 	public void addSection(Section s) {
 		sections.add(s.clone());
 	}
@@ -134,6 +144,16 @@ public class Course {
 					break;
 				}
 			}
+		}
+		return selected;
+	}
+	public Vector<Section> getAllSections(){ // wait ta's response???
+		Vector<Section> selected = new Vector<Section>();
+		for (Section sec: sections) {
+
+					selected.add(sec);
+
+			
 		}
 		return selected;
 	}
