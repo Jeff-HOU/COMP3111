@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -19,10 +20,12 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
+import javafx.scene.Node;
 
 import java.util.Random;
 import java.util.Vector;
 import java.util.AbstractCollection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -77,6 +80,29 @@ public class Controller {
     private TextArea textAreaConsole;
     
     private Scraper scraper = new Scraper();
+    
+    private Vector<Course> course = new Vector<Course>();
+    private HashMap<String, Boolean> filterCheckBox = new HashMap<String, Boolean>();
+    
+    private static String[] filterCheckBoxName = {
+    "#filterMON", "#filterTUE", "#filterWED", "#filterTHU", "#filterFRI", "#filterSAT",
+    "#filterAM", "#filterPM",
+    "#filterCCC", "#filterNOEx", "#filterTLA"
+    };
+    private Vector<Section> selectedSection = new Vector<Section>();
+    AnchorPane ap = (AnchorPane)tabFilter.getContent();
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     @FXML
     void allSubjectSearch() {
