@@ -92,7 +92,7 @@ public class Controller {
     };
     private Vector<Section> selectedSection = new Vector<Section>();
     
-    
+    @FXML
     void selectCourse() {
 //    	if (filterCheckBox.isEmpty()) {
 //    		for (String s: filterCheckBoxName) {
@@ -207,7 +207,7 @@ public class Controller {
     
     
     
-    
+    @FXML
     
     void selectAll() {
     	AnchorPane ap = (AnchorPane)tabFilter.getContent();
