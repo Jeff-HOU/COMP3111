@@ -279,7 +279,7 @@ public class Controller {
     	}
     	selectCourse();
     }
-    
+
     
     @FXML
     void allSubjectSearch() {
@@ -289,6 +289,8 @@ public class Controller {
     @FXML
     void findInstructorSfq() {
     	buttonInstructorSfq.setDisable(true);
+    	
+    	
     }
 
     @FXML
