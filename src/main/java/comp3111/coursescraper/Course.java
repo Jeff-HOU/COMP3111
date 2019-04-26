@@ -9,7 +9,8 @@ public class Course {
 	private String exclusion;
 	private boolean cc4y; // CC-4Y
 	private boolean tla; //has tutorial or lab
-    private boolean noexclusion; // No exclusion
+	private boolean noexclusion; // No exclusion
+  
 	private ArrayList<Section> sections;
 	
 	public Course() {
@@ -17,6 +18,7 @@ public class Course {
 		cc4y = false;
 		tla = false;
 		noexclusion = false;
+
 	}
 	public boolean hasSection(Section s)
 	{
@@ -29,6 +31,7 @@ public class Course {
 	}
 	return false;
 	}
+  
 	public void addSection(Section s) {
 		sections.add(s.clone());
 	}
@@ -88,7 +91,7 @@ public class Course {
 	public int getNumSections() {
 		return sections.size();
 	}
-	
+
 	public void setcc4y(boolean b) {
 		cc4y = b;
 	}
@@ -147,6 +150,7 @@ public class Course {
 		}
 		return selected;
 	}
+
 	public Vector<Section> getAllSections(){ // wait ta's response???
 		Vector<Section> selected = new Vector<Section>();
 		for (Section sec: sections) {
@@ -157,6 +161,7 @@ public class Course {
 		}
 		return selected;
 	}
+ 
 	public Vector<Section> getSectionsThatHaveAMandPMSlots(){ // wait ta's response???
 		Vector<Section> selected_AM = getSectionsThatHaveAMSlots();
 		Vector<Section> selected_PM = getSectionsThatHavePMSlots();
@@ -180,11 +185,5 @@ public class Course {
 		selected.addAll(selected_AM);
 		return selected;
 	}
-
-	
-	
-	
-	
-	
 
 }

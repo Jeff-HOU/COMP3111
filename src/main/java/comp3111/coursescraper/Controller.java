@@ -47,6 +47,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -54,14 +58,21 @@ import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import javafx.scene.Node;
+import javafx.collections.FXCollections;
+import javafx.util.Callback;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import java.util.Random;
 import java.util.Vector;
 import java.util.AbstractCollection;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.net.UnknownHostException;
 public class Controller {
 
     @FXML
@@ -116,13 +127,13 @@ public class Controller {
     
     private Vector<Course> course = new Vector<Course>();
     private HashMap<String, Boolean> filterCheckBox = new HashMap<String, Boolean>();
-    
     private static String[] filterCheckBoxName = {
-    "#filterMON", "#filterTUE", "#filterWED", "#filterTHU", "#filterFRI", "#filterSAT",
-    "#filterAM", "#filterPM",
-    "#filterCCC", "#filterNOEx", "#filterTLA"
+    		"#filterMON", "#filterTUE", "#filterWED", "#filterTHU", "#filterFRI", "#filterSAT",
+    		"#filterAM", "#filterPM",
+    		"#filterCCC", "#filterNOEx", "#filterTLA"
     };
     private Vector<Section> selectedSection = new Vector<Section>();
+    private Vector<SectionsToList> enrolledSection = new Vector<SectionsToList>();
     
     @FXML
     void selectCourse() {
@@ -290,12 +301,95 @@ public class Controller {
     			textAreaConsole.appendText("\t" + sec.getSlot(i) + "\n");
     		}
     	}
+      listCourse();
     }
     
-    
-    
-    
-    
+    void listCourse() { // a very important source: https://stackoverflow.com/questions/48590054/javafx-tableview-how-to-add-a-listener-to-checkbox-column
+    	AnchorPane ap = (AnchorPane)tabList.getContent();
+    	TableView tv = (TableView)ap.lookup("#listTableView");
+    	tv.setEditable(true);
+    	ArrayList<SectionsToList> sectionsToList = new ArrayList<SectionsToList>();
+    	sectionsToList.clear();
+    	tv.setItems(FXCollections.observableArrayList(sectionsToList));
+    	for (Section sec: selectedSection) {
+//    		SectionsToList sectl_new = new SectionsToList(sec.getCourseCode(), sec.getcode(), sec.getCourseName(), sec.getInstructors(), false);
+//    		for (SectionsToList sectl: sectionsToList) {
+//    			if (!sectl.equals(sectl_new))
+//    				sectionsToList.add(sectl_new);
+//    		}
+    		sectionsToList.add(new SectionsToList(sec.getCourseCode(), sec.getcode(), sec.getCourseName(), sec.getInstructors(), false));
+    	}
+    	System.out.print("sectionsToList.size() "+sectionsToList.size() + " ");
+    	for (SectionsToList sectl: enrolledSection) {
+    		for (int i = 0; i < sectionsToList.size(); i++) {
+    			if (sectionsToList.get(i).equals(sectl)) {
+    				System.out.print(i + " ");
+    				sectionsToList.remove(i);
+    				break;
+    			}
+    		}
+//    		int idx = sectionsToList.indexOf(sectl);
+//    		if (idx != -1) sectionsToList.remove(idx);
+    		sectionsToList.add(sectl.clone());
+    	}
+    	System.out.println(sectionsToList.size());
+    	Collections.sort(sectionsToList, new SortSectionsToList());
+    	tv.setItems(FXCollections.observableArrayList(sectionsToList));
+    	tv.refresh();
+    	
+    	for (Object o: tv.getColumns()) {
+    		TableColumn tc = (TableColumn) o;
+    		tc.setEditable(true);
+    		if (tc.getText().equals("Course Code")) {
+    			tc.setCellValueFactory(new PropertyValueFactory<>("courseCode"));
+    		} else if (tc.getText().equals("Section")) {
+    			tc.setCellValueFactory(new PropertyValueFactory<>("section"));
+    		} else if (tc.getText().equals("Course Name")) {
+    			tc.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+    		} else if (tc.getText().equals("Instructor")) {
+    			tc.setCellValueFactory(new PropertyValueFactory<>("instructor"));
+    		} else { //if (tc.getText().equals("Checked")) 
+    			tc.setCellValueFactory(new PropertyValueFactory<>("checked"));
+    			tc.setCellFactory(
+    		            CheckBoxTableCell.forTableColumn(
+    		                    new Callback<Integer, ObservableValue<Boolean>>() {
+    		                        @Override
+    		                        public ObservableValue<Boolean> call(Integer param) {
+    		                        	SectionsToList sectl = sectionsToList.get(param); // what does the param represent??? if no value in the table???
+//    		                        	int idx = enrolledSection.indexOf(sectl);
+//    		                        	if (idx != -1) enrolledSection.remove(idx);
+//    		                        	else enrolledSection.add(sectl);
+    		                            return sectl.enrolledProperty();
+    		                        }
+    		                    }
+    		                )
+    		            );
+    		}
+    	}
+    	for (SectionsToList sectl: sectionsToList) {
+    		sectl.enrolledProperty().addListener(new ChangeListener<Boolean>() {
+    			@Override
+    			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+    				if (newValue) enrolledSection.add(sectl);
+    	    		else {
+//    	    			int idx = enrolledSection.indexOf(sectl);
+//    	    			if (idx != -1) enrolledSection.remove(idx);
+    	    			for (int i = 0; i < enrolledSection.size(); i++) {
+    	        			if (enrolledSection.get(i).equals(sectl)) {
+    	        				System.out.print(i + " ");
+    	        				enrolledSection.remove(i);
+    	        				break;
+    	        			}
+    	        		}
+    	    		}
+    				System.out.println("enrolledSection:");
+    		    	for (SectionsToList sectl: enrolledSection) {
+    		    		System.out.println(sectl.getCourseCode() + " " + sectl.getSection());
+    		    	}
+        	    }
+    		});
+    	}
+    }
     
     
     @FXML
@@ -413,7 +507,8 @@ public class Controller {
     		textAreaConsole.setText("");
     		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),textfieldSubject.getText());
     		course.clear();
-    		course.addAll((Vector<Course>) vec.get(0));    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
+    		course.addAll((Vector<Course>) vec.get(0));
+    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
     		int allNumSections = 0;
     		LocalTime TU310 = LocalTime.parse("03:10PM", DateTimeFormatter.ofPattern("hh:mma", Locale.US));
     		HashSet<Instructor> ins_tu310 = (HashSet<Instructor>)ins.clone(); //???
@@ -459,20 +554,23 @@ public class Controller {
         	randomLabel.setMaxHeight(60);
         
         	ap.getChildren().addAll(randomLabel);
+        	AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
+        	ap_tabstat.getChildren().clear();
     	} catch (Exception e) {
     		if (e instanceof PageNotFoundError) {
     			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
-    			Label msg = new Label("404 NOT FOUND");
-    			ap.getChildren().add(msg);
-    			
-    		}else if (e instanceof UrlNotValidError) {
+        		Label msg = new Label("404 NOT FOUND");
+        		ap.getChildren().add(msg);
+    		} else if (e instanceof UrlNotValidError) {
     			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
     		} else if (e instanceof TermNotValidError) {
     			textAreaConsole.setText("Term you entered: \n\t" + e.getMessage() + "\nis invalid");
     		} else if (e instanceof SubjectNotValidError) {
     			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
+    		} else if (e instanceof UnknownHostException) {
+    			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
     		}
-
+    		
     	}
     	
     	

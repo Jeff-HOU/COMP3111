@@ -27,6 +27,10 @@ public class Slot {
 		s.venue = this.venue;
 		return s;
 	}
+	public boolean equals(Slot s) {
+		if (s.getDay() == day && s.getStart().equals(start) && s.getEnd().equals(end) && s.getVenue().equals(venue)) return true;
+		return false;
+	}
 	public String toString() {
 		return DAYS[day] + " " + start.toString() + "-" + end.toString() + ":" + venue;
 	}
