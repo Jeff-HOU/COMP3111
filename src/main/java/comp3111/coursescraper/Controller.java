@@ -1,10 +1,43 @@
 package comp3111.coursescraper;
+import java.util.HashSet;
+import java.net.URLEncoder;
+import java.net.URL;
+import java.util.List;
+import java.util.Set;
 
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomNode;
+import com.gargoylesoftware.htmlunit.html.DomNodeList;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
+import javafx.scene.layout.AnchorPane;
+
+import com.gargoylesoftware.htmlunit.html.DomText;
+import java.util.Vector;
+import java.util.HashSet;
+import java.net.URLEncoder;
+import java.net.URL;
+import java.util.List;
+import java.util.Set;
+
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomNode;
+import com.gargoylesoftware.htmlunit.html.DomNodeList;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
+import javafx.scene.layout.AnchorPane;
+
+import com.gargoylesoftware.htmlunit.html.DomText;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -13,16 +46,19 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
+import javafx.scene.Node;
 
 import java.util.Random;
 import java.util.Vector;
 import java.util.AbstractCollection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -78,14 +114,291 @@ public class Controller {
     
     private Scraper scraper = new Scraper();
     
+    private Vector<Course> course = new Vector<Course>();
+    private HashMap<String, Boolean> filterCheckBox = new HashMap<String, Boolean>();
+    
+    private static String[] filterCheckBoxName = {
+    "#filterMON", "#filterTUE", "#filterWED", "#filterTHU", "#filterFRI", "#filterSAT",
+    "#filterAM", "#filterPM",
+    "#filterCCC", "#filterNOEx", "#filterTLA"
+    };
+    private Vector<Section> selectedSection = new Vector<Section>();
+    
     @FXML
-    void allSubjectSearch() {
+    void selectCourse() {
+//    	if (filterCheckBox.isEmpty()) {
+//    		for (String s: filterCheckBoxName) {
+//        		filterCheckBox.put(s, false);
+//        	}
+//    	}
+    	AnchorPane ap = (AnchorPane)tabFilter.getContent();
+    	for (String s: filterCheckBoxName) {
+    		filterCheckBox.put(s, ((CheckBox) ap.lookup(s)).isSelected());
+    	}
+    	Vector<Section> AMPM = new Vector<Section>();
+    	if (filterCheckBox.get("#filterAM") && filterCheckBox.get("#filterPM")) {
+    		for (Course c: course) {
+    			AMPM.addAll(c.getSectionsThatHaveAMandPMSlots());
+    		}
+    	} else if (filterCheckBox.get("#filterAM") && !(filterCheckBox.get("#filterPM"))) {
+    		for (Course c: course) {
+    			AMPM.addAll(c.getSectionsThatHaveAMSlots());
+    		}
+    	} else if (!(filterCheckBox.get("#filterAM")) && filterCheckBox.get("#filterPM")) {
+    		for (Course c: course) {
+    			AMPM.addAll(c.getSectionsThatHavePMSlots());
+    		}
+    	} else {
+    		for (Course c: course) {
+    			for (int i = 0; i < c.getNumSections(); i++) {
+    				AMPM.add(c.getSection(i));
+    			}
+    		}
+    	}
+    	Vector<Section> selectAMPM = new Vector<Section>();
+
+    	for(Course c:course)
+    	{ 
+    		for(Section s:AMPM) {
+
+	    		if(c.hasSection(s))
+	    		{
+	    			selectAMPM.addAll(c.getAllSections());
+	    			break;
+	    		}
+    		}
+    	
+    	}
+
+
+    	Vector<Section> Day = new Vector<Section>();
+    	for (Course c: course) {
+//    		System.out.println(c.getTitle());
+    		Vector<Section> selectDayForCourse = new Vector<Section>();
+    		int count=0;
+    		for (int i = 0; i < Slot.DAYS.length; i++) {
+    			if (filterCheckBox.get(filterCheckBoxName[i])) {
+    				count++;
+    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
+//    				if (c.getSectionsThatHaveSlotOnDay(i).isEmpty()) {
+//    					selectDayForCourse.clear();
+//    					break;
+//    				}
+    				if (count==1) selectDayForCourse.addAll(c.getSectionsThatHaveSlotOnDay(i));
+//    				if (c.getSectionsThatHaveSlotOnDay(i).isEmpty())
+//    				{
+//    					selectDayForCourse.clear();
+//    					break;
+//    				}
+    				else selectDayForCourse.retainAll(c.getSectionsThatHaveSlotOnDay(i));
+    			}
+    		}
+    		Day.addAll(selectDayForCourse);
+    	}
+    	Vector<Section> selectDay = new Vector<Section>();
+    	for(Course c:course)
+    	{
+    		for(Section s:Day)
+    		{
+    			if(c.hasSection(s))
+    			{
+    				selectDay.addAll(c.getAllSections());
+    				break;
+    			}
+    		}
+    	}
+//    	Vector<Section> selectDay = new Vector<Section>();
+//    	Vector<Section> selectDayForCourses = new Vector<Section>();
+//    	for (Course c:course)
+//    	{
+//    		for (int i = 0; i < c.getNumSections(); i++) {
+//				selectDayForCourses.add(c.getSection(i));
+//			}
+//    		
+//    	}
+//    	System.out.println("hhssh2--\\|/" + selectDayForCourses.size());
+//    	for (Course c: course) {
+////    		System.out.println(c.getTitle());
+//    		
+//    		for (int i = 0; i < Slot.DAYS.length; i++) {
+//    			if (filterCheckBox.get(filterCheckBoxName[i])) {
+////    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
+//    				
+//     				selectDayForCourses.retainAll(c.getSectionsThatHaveSlotOnDay(i));
+//     				System.out.println("hhssh2--\\|/" +i+ "a"+selectDay.size());
+//    			}
+//    			else System.out.println("ass"+i);
+//    		}
+//    		selectDay.addAll(selectDayForCourses);
+//    	}
+//    	
+//    	System.out.println("hhssh2--\\|/" + selectDay.size());
+//    	for (Section sec: selectDay) {
+//    		System.out.println(sec.getid());
+//    	}
+//    	System.out.println("hhssh2--/|\\" + selectDay.size());
+    	Vector<Section> selectCCC = new Vector<Section>();
+    	if (filterCheckBox.get("#filterCCC")) {
+    		for (Course c: course) {
+        		if (c.getcc4y()) {
+        			for (int i = 0; i < c.getNumSections(); i++) {
+        				selectCCC.add(c.getSection(i));
+        			}
+        		}
+        	}
+    	}
+    	Vector<Section> selectNOEx = new Vector<Section>();
+    	if (filterCheckBox.get("#filterNOEx")) {
+    		for (Course c: course) {
+        		if (c.getnoexclusion()) {
+        			for (int i = 0; i < c.getNumSections(); i++) {
+        				selectNOEx.add(c.getSection(i));
+        			}
+        		}
+        	}
+    	}
+    	Vector<Section> selectTLA = new Vector<Section>();
+    	if (filterCheckBox.get("#filterTLA")) {
+    		for (Course c: course) {
+        		if (c.gettla()) {
+        			for (int i = 0; i < c.getNumSections(); i++) {
+        				selectTLA.add(c.getSection(i));
+        			}
+        		}
+        	}
+    	}
+    	selectedSection.clear();
+    	selectedSection.addAll((Vector<Section>)selectAMPM.clone());// selectAMPM.clear();
+    	boolean tmp_selectday = filterCheckBox.get("#filterMON")||filterCheckBox.get("#filterTUE") ||filterCheckBox.get("#filterWED") ||filterCheckBox.get("#filterTHU") ||filterCheckBox.get("#filterFRI")||filterCheckBox.get("#filterSAT");
+    	if (tmp_selectday)  selectedSection.retainAll((Vector<Section>)selectDay.clone());// selectDay.clear();
+    	if (filterCheckBox.get("#filterCCC"))  selectedSection.retainAll((Vector<Section>)selectCCC.clone());// selectCCC.clear();
+    	if (filterCheckBox.get("#filterNOEx")) selectedSection.retainAll((Vector<Section>)selectNOEx.clone());// selectNOEx.clear();
+    	if (filterCheckBox.get("#filterTLA"))  selectedSection.retainAll((Vector<Section>)selectTLA.clone());// selectTLA.clear();
+    	System.out.println("filtered course size and their id list: " + selectedSection.size());
+    	for (Section s: selectedSection) {
+    		System.out.println(s.getid());
+    	}
+//    	System.out.println("-------");
+//    	for (Section s: selectTLA) {
+//    		System.out.println(s.getid());
+//    	}
+    	textAreaConsole.setText("Filtered Courses:\n");
+    	for (Section sec: selectedSection) {
+    		textAreaConsole.appendText(sec.getCourseCode() + "\t" + sec.getcode()); // is there any extra information needed to display???
+    		textAreaConsole.appendText("\n");
+    		for (int i = 0; i < sec.getNumSlots(); i++) {
+    			textAreaConsole.appendText("\t" + sec.getSlot(i) + "\n");
+    		}
+    	}
+    }
+    
+    
+    
+    
+    
+    
+    
+    @FXML
+    
+    void selectAll() {
+    	AnchorPane ap = (AnchorPane)tabFilter.getContent();
+    	ObservableList<Node> nodes = ap.getChildren();
+    	Button b = (Button) ap.lookup("#filterSelectAll");
+    	if (b.getText().equals("Select All")) {
+    		b.setText("De-select All");
+    		for (Node node: nodes) {
+    			if (node instanceof CheckBox) ((CheckBox)node).setSelected(true);
+    		}
+    	} else {
+    		b.setText("Select All");
+    		for (Node node: nodes) {
+    			if (node instanceof CheckBox) ((CheckBox)node).setSelected(false);
+    		}
+    	}
+    	selectCourse();
+    }
+
+    
+    @FXML
+    void allSubjectSearch() {buttonSfqEnrollCourse.setDisable(false);
     	
     }
 
     @FXML
     void findInstructorSfq() {
-    	buttonInstructorSfq.setDisable(true);
+		WebClient client = new WebClient();
+		client.getOptions().setCssEnabled(false);
+		client.getOptions().setJavaScriptEnabled(false);
+		String searchUrl = textfieldSfqUrl.getText();
+		try {
+			HtmlPage page = client.getPage(searchUrl);
+			List<?> items=(List<?>) page.getByXPath("//table");
+			Vector<Instructor> instructor=new Vector<Instructor>();
+			for(int i=2;i<items.size()-1;i++)
+			{
+				HtmlElement htmlItem= (HtmlElement) items.get(i);
+				
+				List<?> trs=(List<?>) htmlItem.getByXPath(".//tr[td[contains(.,',')]]");
+				for(int j=0;j<trs.size();j=j+1)
+				{
+					HtmlElement element = (HtmlElement) trs.get(j);
+					List<?> tds=(List<?>) element.getByXPath(".//td");
+					
+					HtmlElement name=(HtmlElement) tds.get(2);
+					String insName=name.asText();
+					
+//					System.out.println(insName);
+					
+					HtmlElement score = (HtmlElement) tds.get(4);					
+					String TxtScore=score.asText();
+					String insScore=TxtScore.substring(0, 4);
+					if (insScore.charAt(0)!='-')
+					{	
+						Instructor ins=new Instructor(insName);
+						ins.setSfq(Double.valueOf(insScore));
+						instructor.add(ins);					
+					}		
+				}				
+				
+			}
+			Vector<Instructor> instructor2=new Vector<Instructor>();
+			for(Instructor i: instructor) {
+				int flag=0;
+				for(Instructor j:instructor2) 
+				{										
+					if (i.getName().equals(j.getName()))
+					{
+						double averageSfq=(j.getSfq()*j.getNumSection()+i.getSfq())/(j.numSection+1);
+						j.numSection++;
+						j.setSfq(averageSfq);
+						flag=1;
+						break;
+					}		
+					
+				}
+				if(flag==0)
+				{
+					instructor2.add(i);
+				}
+			}
+			for(Instructor k: instructor2)
+			{			
+				textAreaConsole.appendText("Instructor Name: "  + k.getName()+ "\t SFQ: " + k.getSfq()+"\n");				
+			}
+			
+			
+			
+			
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+
+    	
+    	
+    	
     }
 
     @FXML
@@ -95,14 +408,16 @@ public class Controller {
 
     @FXML
     void search() {
+    	buttonSfqEnrollCourse.setDisable(false);
     	try {
+    		textAreaConsole.setText("");
     		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),textfieldSubject.getText());
-    		Vector<Course> v = (Vector<Course>) vec.get(0);
-    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
+    		course.clear();
+    		course.addAll((Vector<Course>) vec.get(0));    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
     		int allNumSections = 0;
     		LocalTime TU310 = LocalTime.parse("03:10PM", DateTimeFormatter.ofPattern("hh:mma", Locale.US));
     		HashSet<Instructor> ins_tu310 = (HashSet<Instructor>)ins.clone(); //???
-    		for (Course c : v) {
+    		for (Course c : course) {
     			allNumSections += c.getNumSections();
         		String newline = c.getTitle() + "\n";
         		for (int i = 0; i < c.getNumSections(); i++) {
@@ -122,7 +437,7 @@ public class Controller {
         	
     		String searchInfo = "";
     		searchInfo += "Total Number of difference sections in this search: " + allNumSections + "\n";
-    		searchInfo += "Total Number of Course in this search: " + v.size() + "\n";
+    		searchInfo += "Total Number of Course in this search: " + course.size() + "\n";
     		searchInfo += "Instructors who has teaching assignment this term but does not need to teach at Tu 3:10pm:\n";
     		for (Instructor inst: ins_tu310) {
     			searchInfo += inst + "\n"; // 说好的不会重复呢？？？
@@ -144,11 +459,23 @@ public class Controller {
         	randomLabel.setMaxHeight(60);
         
         	ap.getChildren().addAll(randomLabel);
-    	} catch (PageNotFoundError e) {
-    		AnchorPane ap = (AnchorPane)tabStatistic.getContent();
-    		Label msg = new Label("404 NOT FOUND");
-    		ap.getChildren().add(msg);
+    	} catch (Exception e) {
+    		if (e instanceof PageNotFoundError) {
+    			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
+    			Label msg = new Label("404 NOT FOUND");
+    			ap.getChildren().add(msg);
+    			
+    		}else if (e instanceof UrlNotValidError) {
+    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+    		} else if (e instanceof TermNotValidError) {
+    			textAreaConsole.setText("Term you entered: \n\t" + e.getMessage() + "\nis invalid");
+    		} else if (e instanceof SubjectNotValidError) {
+    			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
+    		}
+
     	}
+    	
+    	
     	
     }
 

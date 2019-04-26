@@ -4,6 +4,8 @@ public class Section {
 	private static final int DEFAULT_MAX_SLOT = 3;
 	private static final int DEFAULT_MAX_INS = 20;
 	private String id; // 1809
+	private String courseCode;
+	private String courseName;
 	private String code; //L1 LA1 T1
 	private Slot [] slots;
 	private int numSlots;
@@ -28,7 +30,13 @@ public class Section {
 		s.numSlots = this.numSlots;
 		s.instructors = this.instructors.clone();
 		s.numInstructors = this.numInstructors;
+		s.courseCode = this.courseCode;
+		s.courseName = this.courseName;
 		return s;
+	}
+	public boolean equals(Section sec) {
+		if (id == sec.getid()) return true;
+		return false;
 	}
 	
 	public String toString() {
@@ -81,6 +89,7 @@ public class Section {
 	public void setcode(String code) {
 		this.code = code;
 	}
+
 	/**
 	 * @return the numSlots
 	 */
@@ -95,5 +104,17 @@ public class Section {
 		this.numSlots = numSlots;
 	}
 	
+	public void setCourseCode(String s) {
+		courseCode = s;
+	}
+	public String getCourseCode() {
+		return courseCode;
+	}
+	public void setCourseName(String s) {
+		courseName = s;
+	}
+	public String getCourseName() {
+		return courseName;
+	}
 	
 }
