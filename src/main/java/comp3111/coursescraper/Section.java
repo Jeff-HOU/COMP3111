@@ -11,6 +11,7 @@ public class Section {
 	private int numSlots;
 	private Instructor [] instructors;
 	private int numInstructors;
+	private double secsfq;
 	
 	public Section() {
 		slots = new Slot[DEFAULT_MAX_SLOT];
@@ -19,11 +20,13 @@ public class Section {
 		instructors = new Instructor[DEFAULT_MAX_INS];
 		for (int i = 0; i < DEFAULT_MAX_INS; i++) instructors[i] = null;
 		numInstructors = 0;
+		secsfq=0;
 	}
 	
 	@Override
 	public Section clone() {
 		Section s = new Section();
+		s.secsfq=this.secsfq;
 		s.id = this.id;
 		s.code = this.code;
 		s.slots = this.slots.clone();
@@ -116,5 +119,10 @@ public class Section {
 	public String getCourseName() {
 		return courseName;
 	}
-	
+	public double getSecSfq() {
+		return secsfq;
+	}
+	public void setSecSfq(double sfq) {
+		this.secsfq =sfq;
+	}
 }

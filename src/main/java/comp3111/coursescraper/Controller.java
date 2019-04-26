@@ -337,7 +337,7 @@ public class Controller {
 			for(int i=2;i<items.size()-1;i++)
 			{
 				HtmlElement htmlItem= (HtmlElement) items.get(i);
-				
+//				List<?> trs=(List<?>) htmlItem.getByXPath(".//tr[td[3][string-length(text())>0]]");
 				List<?> trs=(List<?>) htmlItem.getByXPath(".//tr[td[contains(.,',')]]");
 				for(int j=0;j<trs.size();j=j+1)
 				{
@@ -403,6 +403,101 @@ public class Controller {
 
     @FXML
     void findSfqEnrollCourse() {
+    	WebClient client = new WebClient();
+		client.getOptions().setCssEnabled(false);
+		client.getOptions().setJavaScriptEnabled(false);
+		String searchUrl = textfieldSfqUrl.getText();
+		try {
+			HtmlPage page = client.getPage(searchUrl);
+			List<?> items=(List<?>) page.getByXPath("//table");
+			Vector<Section> sectionlist=new Vector<Section>();
+			for(int i=2;i<items.size()-1;i++)
+			{
+				HtmlElement htmlItem= (HtmlElement) items.get(i);
+//				List<?> trs=(List<?>) htmlItem.getByXPath(".//tr[td[2][string-length(text())>0]]");	
+				List<?> trs=(List<?>) htmlItem.getByXPath(".//*[count(td)=6]");				
+				
+				for(int j=0;j<trs.size();j=j+1)
+				{
+					HtmlElement element = (HtmlElement) trs.get(j);
+					List<?> tds=(List<?>) element.getByXPath(".//td");
+					HtmlElement course=(HtmlElement) tds.get(0);
+					String courseCode=course.asText().replace(" ","");				
+					HtmlElement numSection=(HtmlElement) tds.get(7);
+					String numOfSect=numSection.asText();
+					int numOfSection=Integer.valueOf(numOfSection);
+					int k=0;
+					while(k<numOfSection)
+					{
+							element=(HtmlElement) element.getByXPath(".//following-sibling::tr[1]");
+							List<?> tds2=(List<?>) element.getByXPath(".//td");
+							HtmlElement Section=(HtmlElement) tds2.get(1);
+							String SectionCode=Section.asText();
+							if(SectionCode!=null&&(!SectionCode.isEmpty()))
+							{
+								HtmlElement score = (HtmlElement) tds.get(3);					
+								String TxtScore=score.asText();
+								String insScore=TxtScore.substring(0, 4);
+								k=k+1;
+								if (insScore.charAt(0)!='-')
+								{
+									Section asection=new Section();
+									asection.setCourseCode(courseCode);
+									asection.setcode(SectionCode);															
+									asection.setSecSfq(Double.valueOf(insScore));
+									sectionlist.add(asection);
+								}
+							}
+																
+					}
+					
+						
+				}				
+				
+			}
+			Vector<Course> courses=new Vector<Course>();
+			for(Section section: sectionlist) {
+				int flag=0;
+				for(Course c:courses) 
+				{			
+					if (section.getCourseCode().equals(c.getCourseCode()))
+					{
+						double averageSfq=(c.getSfq()*c.getNumSections()+section.getSecSfq())/(c.getNumSections()+1);
+						c.addSection(section);
+						
+						c.setSfq(averageSfq);
+						flag=1;
+						break;
+					}
+				}	
+				if(flag==0)
+				{
+					Course newcourse=new Course();
+					newcourse.addSection(section);
+					newcourse.setCourseCode(section.getCourseCode());
+					newcourse.setSfq(section.getSecSfq());
+					courses.add(newcourse);
+				}
+			}
+		
+			
+		
+			for(Course k: courses)
+			{	
+				for(Section s: enrolled)
+				{
+					if(k.getCourseCode().equals(s.getCourseCode()))
+					{
+						textAreaConsole.appendText("Course Code: "  + k.getCourseCode()+ "\t SFQ: " + k.getSfq()+"\n");				
+					}
+				}
+			}
+					
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 
     }
 
