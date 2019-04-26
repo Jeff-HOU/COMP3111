@@ -1,5 +1,6 @@
 package comp3111.coursescraper;
 import java.util.AbstractCollection;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.net.URLEncoder;
@@ -168,11 +169,11 @@ public class Scraper {
 	}
 
 	public Vector<AbstractCollection> scrape(String baseurl, String term, String sub) throws PageNotFoundError, UrlNotValidError, TermNotValidError, SubjectNotValidError, UnknownHostException {
-
 		try {
 			if (!isValidUrl(baseurl)) throw new UrlNotValidError(baseurl);
 			if (!isValidTerm(term)) throw new TermNotValidError(term);
 			if (!isValidSubject(sub)) throw new SubjectNotValidError(sub);
+
 			HtmlPage page = client.getPage(baseurl + "/" + term + "/subject/" + sub);
 
 			

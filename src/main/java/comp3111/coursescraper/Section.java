@@ -8,6 +8,8 @@ public class Section {
 	private String courseCode;
 	private String courseName;
 	private String id; // 1809
+	private String courseCode;
+	private String courseName;
 	private String code; //L1 LA1 T1
 	private ArrayList<Slot> slots;
 	private ArrayList<Instructor> instructors;
@@ -32,6 +34,7 @@ public class Section {
 		if (id == sec.getid()) return true;
 		return false;
 	}
+
 	public String toString() {
 		String out = code + ":\n";
 		for (Slot s: slots) {
@@ -82,6 +85,7 @@ public class Section {
 	public void setcode(String code) {
 		this.code = code;
 	}
+
 	/**
 	 * @return the numSlots
 	 */
@@ -101,5 +105,17 @@ public class Section {
 		return courseName;
 	}
 	
+	public void setCourseCode(String s) {
+		courseCode = s;
+	}
+	public String getCourseCode() {
+		return courseCode;
+	}
+	public void setCourseName(String s) {
+		courseName = s;
+	}
+	public String getCourseName() {
+		return courseName;
+	}
 	
 }
