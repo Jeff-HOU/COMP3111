@@ -1,5 +1,6 @@
 package comp3111.coursescraper;
 import java.util.AbstractCollection;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.net.URLEncoder;

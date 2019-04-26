@@ -1,6 +1,38 @@
 package comp3111.coursescraper;
+import java.util.HashSet;
+import java.net.URLEncoder;
+import java.net.URL;
+import java.util.List;
+import java.util.Set;
 
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomNode;
+import com.gargoylesoftware.htmlunit.html.DomNodeList;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
+import javafx.scene.layout.AnchorPane;
+
+import com.gargoylesoftware.htmlunit.html.DomText;
+import java.util.Vector;
+import java.util.HashSet;
+import java.net.URLEncoder;
+import java.net.URL;
+import java.util.List;
+import java.util.Set;
+
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomNode;
+import com.gargoylesoftware.htmlunit.html.DomNodeList;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
+import javafx.scene.layout.AnchorPane;
+
+import com.gargoylesoftware.htmlunit.html.DomText;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -288,13 +320,83 @@ public class Controller {
 
     
     @FXML
-    void allSubjectSearch() {
+    void allSubjectSearch() {buttonSfqEnrollCourse.setDisable(false);
     	
     }
 
     @FXML
     void findInstructorSfq() {
-    	buttonInstructorSfq.setDisable(true);
+		WebClient client = new WebClient();
+		client.getOptions().setCssEnabled(false);
+		client.getOptions().setJavaScriptEnabled(false);
+		String searchUrl = textfieldSfqUrl.getText();
+		try {
+			HtmlPage page = client.getPage(searchUrl);
+			List<?> items=(List<?>) page.getByXPath("//table");
+			Vector<Instructor> instructor=new Vector<Instructor>();
+			for(int i=2;i<items.size()-1;i++)
+			{
+				HtmlElement htmlItem= (HtmlElement) items.get(i);
+				
+				List<?> trs=(List<?>) htmlItem.getByXPath(".//tr[td[contains(.,',')]]");
+				for(int j=0;j<trs.size();j=j+1)
+				{
+					HtmlElement element = (HtmlElement) trs.get(j);
+					List<?> tds=(List<?>) element.getByXPath(".//td");
+					
+					HtmlElement name=(HtmlElement) tds.get(2);
+					String insName=name.asText();
+					
+//					System.out.println(insName);
+					
+					HtmlElement score = (HtmlElement) tds.get(4);					
+					String TxtScore=score.asText();
+					String insScore=TxtScore.substring(0, 4);
+					if (insScore.charAt(0)!='-')
+					{	
+						Instructor ins=new Instructor(insName);
+						ins.setSfq(Double.valueOf(insScore));
+						instructor.add(ins);					
+					}		
+				}				
+				
+			}
+			Vector<Instructor> instructor2=new Vector<Instructor>();
+			for(Instructor i: instructor) {
+				int flag=0;
+				for(Instructor j:instructor2) 
+				{										
+					if (i.getName().equals(j.getName()))
+					{
+						double averageSfq=(j.getSfq()*j.getNumSection()+i.getSfq())/(j.numSection+1);
+						j.numSection++;
+						j.setSfq(averageSfq);
+						flag=1;
+						break;
+					}		
+					
+				}
+				if(flag==0)
+				{
+					instructor2.add(i);
+				}
+			}
+			for(Instructor k: instructor2)
+			{			
+				textAreaConsole.appendText("Instructor Name: "  + k.getName()+ "\t SFQ: " + k.getSfq()+"\n");				
+			}
+			
+			
+			
+			
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+
+    	
     	
     	
     }
@@ -306,6 +408,7 @@ public class Controller {
 
     @FXML
     void search() {
+    	buttonSfqEnrollCourse.setDisable(false);
     	try {
     		textAreaConsole.setText("");
     		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),textfieldSubject.getText());
