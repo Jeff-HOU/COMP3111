@@ -62,6 +62,7 @@ import javafx.collections.FXCollections;
 import javafx.util.Callback;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.Random;
 import java.util.Vector;
@@ -319,11 +320,11 @@ public class Controller {
 //    		}
     		sectionsToList.add(new SectionsToList(sec.getCourseCode(), sec.getcode(), sec.getCourseName(), sec.getInstructors(), false));
     	}
-    	System.out.print("sectionsToList.size() "+sectionsToList.size() + " ");
+//    	System.out.print("sectionsToList.size() "+sectionsToList.size() + " ");
     	for (SectionsToList sectl: enrolledSection) {
     		for (int i = 0; i < sectionsToList.size(); i++) {
     			if (sectionsToList.get(i).equals(sectl)) {
-    				System.out.print(i + " ");
+//    				System.out.print(i + " ");
     				sectionsToList.remove(i);
     				break;
     			}
@@ -332,7 +333,7 @@ public class Controller {
 //    		if (idx != -1) sectionsToList.remove(idx);
     		sectionsToList.add(sectl.clone());
     	}
-    	System.out.println(sectionsToList.size());
+//    	System.out.println(sectionsToList.size());
     	Collections.sort(sectionsToList, new SortSectionsToList());
     	tv.setItems(FXCollections.observableArrayList(sectionsToList));
     	tv.refresh();
@@ -349,47 +350,37 @@ public class Controller {
     		} else if (tc.getText().equals("Instructor")) {
     			tc.setCellValueFactory(new PropertyValueFactory<>("instructor"));
     		} else { //if (tc.getText().equals("Checked")) 
-    			tc.setCellValueFactory(new PropertyValueFactory<>("checked"));
-    			tc.setCellFactory(
-    		            CheckBoxTableCell.forTableColumn(
-    		                    new Callback<Integer, ObservableValue<Boolean>>() {
-    		                        @Override
-    		                        public ObservableValue<Boolean> call(Integer param) {
-    		                        	SectionsToList sectl = sectionsToList.get(param); // what does the param represent??? if no value in the table???
-//    		                        	int idx = enrolledSection.indexOf(sectl);
-//    		                        	if (idx != -1) enrolledSection.remove(idx);
-//    		                        	else enrolledSection.add(sectl);
-    		                            return sectl.enrolledProperty();
-    		                        }
-    		                    }
-    		                )
-    		            );
-    		}
+    			tc.setCellValueFactory(
+    				(Callback<TableColumn.CellDataFeatures<SectionsToList, CheckBox>, ObservableValue<CheckBox>>) param -> {
+    					SectionsToList sectl = param.getValue();
+    					CheckBox checkbox = new CheckBox();
+    					checkbox.selectedProperty().setValue(sectl.getEnrolled());
+    					checkbox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+    		    			@Override
+    		    			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+    		    				sectl.setEnrolled(newValue);
+    		    				if (checkbox.isSelected()) enrolledSection.add(sectl);
+    		    	    		else {
+    		    	    			for (int i = 0; i < enrolledSection.size(); i++) {
+    		    	        			if (enrolledSection.get(i).equals(sectl)) {
+//    		    	        				System.out.print(i + " ");
+    		    	        				enrolledSection.remove(i);
+    		    	        				break;
+    		    	        			}
+    		    	        		}
+    		    	    		}
+    		    				System.out.println("Enrolled sections:");
+    		    		    	for (SectionsToList sectl: enrolledSection) {
+    		    		    		System.out.println(sectl.getCourseCode() + " " + sectl.getSection());
+    		    		    	}
+    		        	    }
+    		    		});
+    					return new SimpleObjectProperty<CheckBox>(checkbox);
+    				}
+    			);
+    		}}
     	}
-    	for (SectionsToList sectl: sectionsToList) {
-    		sectl.enrolledProperty().addListener(new ChangeListener<Boolean>() {
-    			@Override
-    			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-    				if (newValue) enrolledSection.add(sectl);
-    	    		else {
-//    	    			int idx = enrolledSection.indexOf(sectl);
-//    	    			if (idx != -1) enrolledSection.remove(idx);
-    	    			for (int i = 0; i < enrolledSection.size(); i++) {
-    	        			if (enrolledSection.get(i).equals(sectl)) {
-    	        				System.out.print(i + " ");
-    	        				enrolledSection.remove(i);
-    	        				break;
-    	        			}
-    	        		}
-    	    		}
-    				System.out.println("enrolledSection:");
-    		    	for (SectionsToList sectl: enrolledSection) {
-    		    		System.out.println(sectl.getCourseCode() + " " + sectl.getSection());
-    		    	}
-        	    }
-    		});
-    	}
-    }
+
     
     
     @FXML
