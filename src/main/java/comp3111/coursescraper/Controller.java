@@ -78,6 +78,7 @@ public class Controller {
     
     private Scraper scraper = new Scraper();
     
+    
     @FXML
     void allSubjectSearch() {
     	try {
@@ -89,12 +90,14 @@ public class Controller {
     		}
     		else {
     			first = true;
+    			double progress = 0;
+    			int totalcourse = 0;
     			Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
     			for(String a: subjects) {
     				try {
     		    		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),a);
     		    		Vector<Course> v = (Vector<Course>) vec.get(0);
-    		    		
+    		    		totalcourse+=v.size();
     		    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
     		    		int allNumSections = 0;
     		    		LocalTime TU310 = LocalTime.parse("03:10PM", DateTimeFormatter.ofPattern("hh:mma", Locale.US));
@@ -118,13 +121,15 @@ public class Controller {
     		        	}
     		        	
     		    		String searchInfo = "";
+    		    		/*
     		    		searchInfo += "Total Number of difference sections in this search: " + allNumSections + "\n";
     		    		searchInfo += "Total Number of Course in this search: " + v.size() + "\n";
     		    		searchInfo += "Instructors who has teaching assignment this term but does not need to teach at Tu 3:10pm:\n";
     		    		for (Instructor inst: ins_tu310) {
     		    			searchInfo += inst + "\n"; // è¯´å¥½çš„ä¸�ä¼šé‡�å¤�å‘¢ï¼Ÿï¼Ÿï¼Ÿ
     		    		}
-    		    		textAreaConsole.appendText(searchInfo);
+    		    		*/
+    		    		//textAreaConsole.appendText(searchInfo);
     		    		
     		        	//Add a random block on Saturday
     		        	AnchorPane ap = (AnchorPane)tabTimetable.getContent();
@@ -146,9 +151,12 @@ public class Controller {
     		    		Label msg = new Label("404 NOT FOUND");
     		    		ap.getChildren().add(msg);
     		    	}
-    		    	
+    		    System.out.println("SUBJECT is done");
+    		    progress+=1/(double)subjects.size();
+    		    progressbar.setProgress(progress);
     			}
     			//textAreaConsole.setText("no way");
+    			textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
     		}
     	}catch (PageNotFoundError e) {
     		AnchorPane ap = (AnchorPane)tabStatistic.getContent();
