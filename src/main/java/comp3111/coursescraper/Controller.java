@@ -658,6 +658,7 @@ public class Controller {
         	ap_tabstat.getChildren().clear();
     	} catch (Exception e) {
     		if (e instanceof PageNotFoundError) {
+    			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
     			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
         		Label msg = new Label("404 NOT FOUND");
         		ap.getChildren().add(msg);
@@ -668,7 +669,7 @@ public class Controller {
     		} else if (e instanceof SubjectNotValidError) {
     			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
     		} else if (e instanceof UnknownHostException) {
-    			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
+    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
     		}
     		
     	}

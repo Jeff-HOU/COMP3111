@@ -5,7 +5,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.net.URLEncoder;
 import java.net.URL;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.UnknownHostException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Set;
 
@@ -162,6 +165,22 @@ public class Scraper {
 		return true;
 	}
 	
+	private static boolean isPageFound(String url) {
+		try {
+			URL urlStr = new URL(url);
+			HttpURLConnection connection = (HttpURLConnection) urlStr.openConnection();
+			int state = connection.getResponseCode();
+			if (state == 404){
+				return false;
+			}
+		} catch (MalformedURLException e) {
+			return false;
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
+	
 	private boolean hasTorLA(String s) {
 		if (s.charAt(0) == 'T') return true;
 		if (s.charAt(0) == 'L' && s.charAt(1) == 'A') return true;
@@ -173,6 +192,7 @@ public class Scraper {
 			if (!isValidUrl(baseurl)) throw new UrlNotValidError(baseurl);
 			if (!isValidTerm(term)) throw new TermNotValidError(term);
 			if (!isValidSubject(sub)) throw new SubjectNotValidError(sub);
+			if (!isPageFound(baseurl + "/" + term + "/subject/" + sub)) throw new PageNotFoundError(baseurl + "/" + term + "/subject/" + sub);
 
 			HtmlPage page = client.getPage(baseurl + "/" + term + "/subject/" + sub);
 
@@ -210,7 +230,7 @@ public class Scraper {
 					Section sec = new Section();
 					String [] section_info = e.getChildNodes().get(1).asText().split(" ");
 					if (!checkSectionCodeValid(section_info[0])) {
-						System.out.println("INVALID SECTION CODE FOUND: " + section_info[0] + " of course " + c.getTitle());
+//						System.out.println("INVALID SECTION CODE FOUND: " + section_info[0] + " of course " + c.getTitle());
 						continue;
 					}
 					if (c.gettla() == false && hasTorLA(section_info[0])) {
@@ -264,17 +284,18 @@ public class Scraper {
 				throw new SubjectNotValidError(e.getMessage());
 			} else if (e instanceof UnknownHostException) {
 				throw new UnknownHostException(e.getMessage());
-			}
-			String msg = e.getMessage();
-			if (msg.contains("404")) {
-				throw new PageNotFoundError("404");
+			} else if (e instanceof PageNotFoundError) {
+				throw new PageNotFoundError(e.getMessage());
+//			String msg = e.getMessage();
+//			if (msg.contains("404")) {
+//				throw new PageNotFoundError("404");
 			} else {
 //				System.out.println(e.);
-				System.out.println(e);
-			     StackTraceElement[] arr = e.getStackTrace();
-			     for(int i=0; i<arr.length; i++){
-			       System.out.println(arr[i].toString());
-			     }
+//				System.out.println(e);
+//			     StackTraceElement[] arr = e.getStackTrace();
+//			     for(int i=0; i<arr.length; i++){
+//			       System.out.println(arr[i].toString());
+//			     }
 			}
 		}
 		return null;

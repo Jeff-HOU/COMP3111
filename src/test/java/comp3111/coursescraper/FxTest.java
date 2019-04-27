@@ -14,6 +14,8 @@ import org.testfx.framework.junit.ApplicationTest;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
@@ -45,4 +47,18 @@ public class FxTest extends ApplicationTest {
 		assertTrue(b.isDisabled());
 	}
 	
+	@Test
+	public void testMainTag() {
+		clickOn("#tabMain");
+		TextField tf_url = (TextField) s.lookup("#textfieldURL");
+		tf_url.setText("https://w5.ab.ust.hk/wcq/cgi-bin/");
+		TextField tf_term = (TextField) s.lookup("#textfieldTerm");
+		tf_term.setText("1830");
+		TextField tf_subject = (TextField) s.lookup("#textfieldSubject");
+		tf_subject.setText("COMP");
+		clickOn("#buttonSearch");
+		sleep(5000);
+		TextArea ta = (TextArea)s.lookup("#textAreaConsole");
+		assertTrue(!ta.getText().trim().isEmpty());
+	}
 }
