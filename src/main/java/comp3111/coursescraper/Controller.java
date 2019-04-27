@@ -135,6 +135,7 @@ public class Controller {
     		"#filterCCC", "#filterNOEx", "#filterTLA"
     };
     private Vector<Section> selectedSection = new Vector<Section>();
+    private Vector<Section> allsections = new Vector<Section>();
     private Vector<SectionsToList> enrolledSection = new Vector<SectionsToList>();
     
     @FXML
@@ -144,6 +145,11 @@ public class Controller {
 //        		filterCheckBox.put(s, false);
 //        	}
 //    	}
+    	for(Course c: course) {
+    		for(int j=0;j<c.getNumSections();j++)
+    			allsections.add(c.getSection(j));
+    	}
+    	
     	AnchorPane ap = (AnchorPane)tabFilter.getContent();
     	for (String s: filterCheckBoxName) {
     		filterCheckBox.put(s, ((CheckBox) ap.lookup(s)).isSelected());
@@ -327,6 +333,7 @@ public class Controller {
     			if (sectionsToList.get(i).equals(sectl)) {
 //    				System.out.print(i + " ");
     				sectionsToList.remove(i);
+    				showTable();
     				break;
     			}
     		}
@@ -364,22 +371,32 @@ public class Controller {
     		    	    		else {
     		    	    			for (int i = 0; i < enrolledSection.size(); i++) {
     		    	        			if (enrolledSection.get(i).equals(sectl)) {
-//    		    	        				System.out.print(i + " ");
+    		    	        				//AnchorPane ap = (AnchorPane)tabTimetable.getContent();
+    		    	        				//for(Section s: allsections) {
+    		    	        				//	if(s.getCourseCode()==sectl.getCourseCode()&&s.getcode()==sectl.getSection()) {
+    		    	        				//		for(int j=0;j<s.getNumSlots();j++)
+    		    	        				//			ap.getChildren().remove(s.getSlot(j).la);
+    		    	        				//	}
+    		    	        				//}
     		    	        				enrolledSection.remove(i);
+    		    	        				showTable();
     		    	        				break;
     		    	        			}
     		    	        		}
     		    	    		}
+    		    				showTable();
     		    				System.out.println("Enrolled sections:");
     		    		    	for (SectionsToList sectl: enrolledSection) {
     		    		    		System.out.println(sectl.getCourseCode() + " " + sectl.getSection());
     		    		    	}
     		        	    }
     		    		});
+    					showTable();
     					return new SimpleObjectProperty<CheckBox>(checkbox);
     				}
     			);
     		}}
+    	showTable();
     	}
 
     
@@ -450,32 +467,6 @@ public class Controller {
     		        		textAreaConsole.setText(textAreaConsole.getText() + "\n" + newline); // remove this and change the appendText below to setText???
     		        	}
     		        	
-    		    		//String searchInfo = "";
-    		    		//searchInfo += "Total Number of difference sections in this search: " + allNumSections + "\n";
-    		    		//searchInfo += "Total Number of Course in this search: " + course.size() + "\n";
-    		    		//searchInfo += "Instructors who has teaching assignment this term but does not need to teach at Tu 3:10pm:\n";
-    		    		//for (Instructor inst: ins_tu310) {
-    		    		//	searchInfo += inst + "\n"; // è¯´å¥½çš„ä¸�ä¼šé‡�å¤�å‘¢ï¼Ÿï¼Ÿï¼Ÿ
-    		    		//}
-    		    		//textAreaConsole.appendText(searchInfo);
-    		    		
-    		        	//Add a random block on Saturday
-    		        	AnchorPane ap = (AnchorPane)tabTimetable.getContent();
-    		        	Label randomLabel = new Label("COMP1022\nL1");
-    		        	Random r = new Random();
-    		        	double start = (r.nextInt(10) + 1) * 20 + 40;
-
-    		        	randomLabel.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-    		        	randomLabel.setLayoutX(600.0);
-    		        	randomLabel.setLayoutY(start);
-    		        	randomLabel.setMinWidth(100.0);
-    		        	randomLabel.setMaxWidth(100.0);
-    		        	randomLabel.setMinHeight(60);
-    		        	randomLabel.setMaxHeight(60);
-    		        
-    		        	ap.getChildren().addAll(randomLabel);
-    		        	AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
-    		        	ap_tabstat.getChildren().clear();
     		    	} catch (Exception e) {
     		    		if (e instanceof PageNotFoundError) {
     		    			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
@@ -752,22 +743,22 @@ public class Controller {
     		textAreaConsole.appendText(searchInfo);
     		
         	//Add a random block on Saturday
-        	AnchorPane ap = (AnchorPane)tabTimetable.getContent();
-        	Label randomLabel = new Label("COMP1022\nL1");
-        	Random r = new Random();
-        	double start = (r.nextInt(10) + 1) * 20 + 40;
+        	//AnchorPane ap = (AnchorPane)tabTimetable.getContent();
+        	///Label randomLabel = new Label("COMP1022\nL1");
+        	//Random r = new Random();
+        	//double start = (r.nextInt(10) + 1) * 20 + 40;
 
-        	randomLabel.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-        	randomLabel.setLayoutX(600.0);
-        	randomLabel.setLayoutY(start);
-        	randomLabel.setMinWidth(100.0);
-        	randomLabel.setMaxWidth(100.0);
-        	randomLabel.setMinHeight(60);
-        	randomLabel.setMaxHeight(60);
+        	//randomLabel.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        	//randomLabel.setLayoutX(600.0);
+        	//randomLabel.setLayoutY(start);
+        	//randomLabel.setMinWidth(100.0);
+        	//randomLabel.setMaxWidth(100.0);
+        	//randomLabel.setMinHeight(60);
+        	//randomLabel.setMaxHeight(60);
         
-        	ap.getChildren().addAll(randomLabel);
-        	AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
-        	ap_tabstat.getChildren().clear();
+        	//ap.getChildren().addAll(randomLabel);
+        	//AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
+        	//ap_tabstat.getChildren().clear();
     	} catch (Exception e) {
     		if (e instanceof PageNotFoundError) {
     			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
@@ -787,6 +778,60 @@ public class Controller {
     	}
     	
     	
+    	
+    }
+    void showTable() {
+    	for(Section sec: allsections) {
+    		AnchorPane ap = (AnchorPane)tabTimetable.getContent();
+    		for(int i=0;i<sec.getNumSlots();i++) {
+    			ap.getChildren().remove(sec.getSlot(i).la);
+    		}
+    	}
+    	for(Section sec: selectedSection) {
+    	//for(Section sec: allsections) {
+    		for(SectionsToList stl: enrolledSection) {
+    			AnchorPane ap = (AnchorPane)tabTimetable.getContent();
+    			if(sec.getCourseCode()==stl.getCourseCode()&&sec.getcode()==stl.getSection()&&stl.getEnrolled()==false&&sec.getSlot(0).la!=null) {
+    				System.out.println("im removing");
+    				for(int i =0;i<sec.getNumSlots();i++) {
+    					ap.getChildren().remove(sec.getSlot(i).la);
+    				}
+    				sec.draw = false;
+    			}
+    			if(sec.getCourseCode()==stl.getCourseCode()&&sec.getcode()==stl.getSection()&&stl.getEnrolled()) {
+    				sec.draw =true;
+    				for(int i=0;i<sec.getNumSlots();i++) {
+ 
+    					Label randomLabel = new Label(sec.getCourseCode()+"\n"+sec.getcode());
+    					
+    					if(sec.getSlot(i).getDay()== 0) randomLabel.setLayoutX(100.0);
+    					if(sec.getSlot(i).getDay()== 1) randomLabel.setLayoutX(200.0);
+    					if(sec.getSlot(i).getDay()== 2) randomLabel.setLayoutX(300.0);
+    					if(sec.getSlot(i).getDay()== 3) randomLabel.setLayoutX(400.0);
+    					if(sec.getSlot(i).getDay()== 4) randomLabel.setLayoutX(500.0);
+    					if(sec.getSlot(i).getDay()== 5) randomLabel.setLayoutX(600.0);
+    					
+    					
+    					//System.out.println((sec.getSlot(i).getStartHour()-7)*20+sec.getSlot(i).getStartMinute()/3);
+    					double start = (sec.getSlot(i).getStartHour()-7)*20+sec.getSlot(i).getStartMinute()/3;
+    					//double start = 80;
+    					//double end = 120;
+    					double end = (sec.getSlot(i).getEndHour()-7)*20+sec.getSlot(i).getEndMinute()/3;
+    					randomLabel.setBackground(new Background(new BackgroundFill(sec.getColor(), CornerRadii.EMPTY, Insets.EMPTY)));
+    					randomLabel.setLayoutY(start);
+    					randomLabel.setMinWidth(100);
+    					randomLabel.setMaxWidth(100);
+    					randomLabel.setMinHeight(end-start);
+    					randomLabel.setMaxHeight(end-start);
+    	        
+    					sec.getSlot(i).la = randomLabel;
+    					ap.getChildren().addAll(randomLabel);
+    					AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
+    					ap_tabstat.getChildren().clear();
+    				}
+    			}
+    		}
+    	}
     	
     }
 
