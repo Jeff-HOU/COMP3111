@@ -2,20 +2,24 @@ package comp3111.coursescraper;
 
 public class Instructor {
 	private String name;
-	private String sfq;
+	private double sfq;
+	public int numSection;
 	public Instructor() {
 		name = "";
-		sfq = "";
+		sfq = 0.0;
+		numSection=1;
 	}
 	public Instructor(String s) {
 		name = s;
-		sfq = "";
+		sfq = 0.0;
+		numSection=1;
 	}
 	@Override
 	public Instructor clone() {
 		Instructor i = new Instructor();
 		i.name = this.name;
 		i.sfq = this.sfq;
+		i.numSection=this.numSection;
 		return i;
 	}
 	
@@ -32,10 +36,13 @@ public class Instructor {
 	public String getName() {
 		return name;
 	}
-	public void setSfq(String sfq) {
+	public void setSfq(double sfq) {
 		this.sfq = sfq;
 	}
-	public String getSfq() {
+	public double getSfq() {
 		return sfq;
+	}
+	public int getNumSection() {
+		return numSection;
 	}
 }

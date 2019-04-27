@@ -1,18 +1,65 @@
 package comp3111.coursescraper;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.Vector;
 
 public class Course {	
 	private String title ; 
 	private String description ;
 	private String exclusion;
+	private boolean cc4y; // CC-4Y
+	private boolean tla; //has tutorial or lab
+	private boolean noexclusion; // No exclusion
+  
 	private ArrayList<Section> sections;
+	
+	private double sfq;
+	private String courseCode;
+
+
+  	public void setCourseCode(String s)
+	{
+		this.courseCode=s;
+
+  	}
+
+  	public void setSfq(Double sfq)
+	{
+		this.sfq=sfq;
+
+  	}
+
+
+  	public String getCourseCode() {
+		return courseCode;
+	}
+	public double getSfq() {
+		return sfq;
+	}
+	
 	
 	public Course() {
 		sections = new ArrayList<Section>();
+		cc4y = false;
+		tla = false;
+		noexclusion = false;
+		sfq=0;
+		courseCode="";
+
+
 	}
-	
+	public boolean hasSection(Section s)
+	{
+	for(Section sec:sections)
+	{
+	if (sec.getcode()==s.getcode()&&sec.getCourseCode()==s.getCourseCode())
+	{
+	return true;
+	}
+	}
+	return false;
+	}
+  
 	public void addSection(Section s) {
 		sections.add(s.clone());
 	}
@@ -63,6 +110,7 @@ public class Course {
 	 */
 	public void setExclusion(String exclusion) {
 		this.exclusion = exclusion;
+		if (exclusion.equals("null")) noexclusion = true;
 	}
 	
 	/**
@@ -70,6 +118,100 @@ public class Course {
 	 */
 	public int getNumSections() {
 		return sections.size();
+	}
+
+	public void setcc4y(boolean b) {
+		cc4y = b;
+	}
+	public boolean getcc4y() {
+		return cc4y;
+	}
+	public void settla(boolean b) {
+		tla = b;
+	}
+	public boolean gettla() {
+		return tla;
+	}
+	public void setnoexclusion(boolean b) {
+		noexclusion = b;
+	}
+	public boolean getnoexclusion() {
+		return noexclusion;
+	}
+	public Vector<Section> getSectionsThatHaveSlotOnDay(int day) {
+		Vector<Section> selected = new Vector<Section>();
+		for (Section sec: sections) {
+			for (int i = 0; i < sec.getNumSlots(); i++) {
+				Slot s = sec.getSlot(i);
+				if (s.getDay() == day) {
+					selected.add(sec);
+					break;
+				}
+			}
+		}
+		return selected;
+	}
+	public Vector<Section> getSectionsThatHaveAMSlots(){ // wait ta's response???
+		Vector<Section> selected = new Vector<Section>();
+		for (Section sec: sections) {
+			for (int i = 0; i < sec.getNumSlots(); i++) {
+				Slot s = sec.getSlot(i);
+				if (s.getStartHour() < 12) {
+					selected.add(sec);
+					break;
+				}
+			}
+		}
+		return selected;
+	}
+
+	public Vector<Section> getSectionsThatHavePMSlots(){ // wait ta's response???
+		Vector<Section> selected = new Vector<Section>();
+		for (Section sec: sections) {
+			for (int i = 0; i < sec.getNumSlots(); i++) {
+				Slot s = sec.getSlot(i);
+				if (s.getEndHour() >= 12) {
+					selected.add(sec);
+					break;
+				}
+			}
+		}
+		return selected;
+	}
+
+	public Vector<Section> getAllSections(){ // wait ta's response???
+		Vector<Section> selected = new Vector<Section>();
+		for (Section sec: sections) {
+
+					selected.add(sec);
+
+			
+		}
+		return selected;
+	}
+ 
+	public Vector<Section> getSectionsThatHaveAMandPMSlots(){ // wait ta's response???
+		Vector<Section> selected_AM = getSectionsThatHaveAMSlots();
+		Vector<Section> selected_PM = getSectionsThatHavePMSlots();
+		selected_AM.retainAll(selected_PM); // section has slots across 12:00. below are sections have slot 1 in am slot 2 in pm.
+		Vector<Section> selected = new Vector<Section>();
+		for (Section sec: sections) {
+			boolean hasAMslot = false;
+			boolean hasPMslot = false;
+			for (int i = 0; i < sec.getNumSlots(); i++) {
+				Slot s = sec.getSlot(i);
+				if (s.getStartHour() >= 12) {
+					hasPMslot = true;
+				} else if (s.getEndHour() < 12) {
+					hasAMslot = true;
+				}
+			}
+			if (hasAMslot && hasPMslot) {
+				selected.add(sec);
+			}
+		}
+		selected.addAll(selected_AM);
+		return selected;
 	}
 
 }

@@ -1,36 +1,54 @@
 package comp3111.coursescraper;
 
+import javafx.scene.paint.Color;
+import java.util.Random;
+import java.util.ArrayList;
+import javafx.scene.control.Label;
+
 public class Section {
 	private static final int DEFAULT_MAX_SLOT = 3;
 	private static final int DEFAULT_MAX_INS = 20;
+	private String courseCode;
+	private String courseName;
 	private String id; // 1809
 	private String code; //L1 LA1 T1
-	private Slot [] slots;
-	private int numSlots;
-	private Instructor [] instructors;
-	private int numInstructors;
-	
+	private ArrayList<Slot> slots;
+	private Color c;
+	private ArrayList<Instructor> instructors;
+	private double secsfq;
+	public boolean draw=false;
 	public Section() {
-		slots = new Slot[DEFAULT_MAX_SLOT];
-		for (int i = 0; i < DEFAULT_MAX_SLOT; i++) slots[i] = null;
-		numSlots = 0;
-		instructors = new Instructor[DEFAULT_MAX_INS];
-		for (int i = 0; i < DEFAULT_MAX_INS; i++) instructors[i] = null;
-		numInstructors = 0;
+		Random r = new Random();
+		c = Color.color((double)r.nextInt(Integer.MAX_VALUE)/(Integer.MAX_VALUE-1), (double)r.nextInt(Integer.MAX_VALUE)/(Integer.MAX_VALUE-1), (double)r.nextInt(Integer.MAX_VALUE)/(Integer.MAX_VALUE-1),0.5);
+		slots = new ArrayList<Slot>();
+		instructors = new ArrayList<Instructor>();
+		secsfq=0;
+		
 	}
-	
+	public double getSecSfq() {
+		return secsfq;
+	}
+	public void setSecSfq(double sfq) {
+		this.secsfq =sfq;
+	}
 	@Override
 	public Section clone() {
 		Section s = new Section();
 		s.id = this.id;
 		s.code = this.code;
-		s.slots = this.slots.clone();
-		s.numSlots = this.numSlots;
-		s.instructors = this.instructors.clone();
-		s.numInstructors = this.numInstructors;
+		s.c = this.c;
+		s.slots = (ArrayList<Slot>)this.slots.clone();
+		s.instructors = (ArrayList<Instructor>)this.instructors.clone();
+		s.courseCode = this.courseCode;
+		s.courseName = this.courseName;
+		s.secsfq=this.secsfq;
 		return s;
 	}
-	
+	public boolean equals(Section sec) {
+		if (id == sec.getid()) return true;
+		return false;
+	}
+
 	public String toString() {
 		String out = code + ":\n";
 		for (Slot s: slots) {
@@ -40,20 +58,23 @@ public class Section {
 	}
 	
 	public void addSlot(Slot s) {
-		if (numSlots >= DEFAULT_MAX_SLOT)
+		if (getNumSlots() >= DEFAULT_MAX_SLOT)
 			return;
-		slots[numSlots++] = s.clone();
+		slots.add(s.clone());
 	}
 	public Slot getSlot(int i) {
-		if (i >= 0 && i < numSlots)
-			return slots[i];
+		if (i >= 0 && i < getNumSlots())
+			return slots.get(i);
 		return null;
 	}
-	public void addInstructor(Instructor i) {
-		instructors[numInstructors++] = i.clone();
+	public Color getColor() {
+		return c;
 	}
-	public Instructor [] getInstructors() {
-		return instructors.clone(); // do we need clone???
+	public void addInstructor(Instructor i) {
+		instructors.add(i.clone());
+	}
+	public ArrayList<Instructor> getInstructors() {
+		return (ArrayList<Instructor>)instructors.clone(); // do we need clone???
 	}
 	/**
 	 * @return the id
@@ -81,19 +102,28 @@ public class Section {
 	public void setcode(String code) {
 		this.code = code;
 	}
+
 	/**
 	 * @return the numSlots
 	 */
 	public int getNumSlots() {
-		return numSlots;
+		return slots.size();
 	}
 
-	/**
-	 * @param numSlots the numSlots to set
-	 */
-	public void setNumSlots(int numSlots) {
-		this.numSlots = numSlots;
+	public String getCourseCode() {
+		return courseCode;
 	}
+	public void setCourseName(String s) {
+		courseName = s;
+	}
+
 	
+	public void setCourseCode(String s) {
+		courseCode = s;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
 	
 }

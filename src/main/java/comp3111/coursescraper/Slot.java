@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.time.LocalTime;
 import java.util.Locale;
 import java.time.format.DateTimeFormatter;
+import javafx.scene.control.Label;
 
 public class Slot {
 	private int day;
 	private LocalTime start;
 	private LocalTime end;
 	private String venue;
+	public Label la = null;
 	public static final String DAYS[] = {"Mo", "Tu", "We", "Th", "Fr", "Sa"};
 	public static final Map<String, Integer> DAYS_MAP = new HashMap<String, Integer>();
 	static {
@@ -26,6 +28,10 @@ public class Slot {
 		s.end = this.end;
 		s.venue = this.venue;
 		return s;
+	}
+	public boolean equals(Slot s) {
+		if (s.getDay() == day && s.getStart().equals(start) && s.getEnd().equals(end) && s.getVenue().equals(venue)) return true;
+		return false;
 	}
 	public String toString() {
 		return DAYS[day] + " " + start.toString() + "-" + end.toString() + ":" + venue;
