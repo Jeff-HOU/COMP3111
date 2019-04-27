@@ -301,7 +301,7 @@ public class Controller {
     			textAreaConsole.appendText("\t" + sec.getSlot(i) + "\n");
     		}
     	}
-      listCourse();
+    	listCourse();
     }
     
     void listCourse() { // a very important source: https://stackoverflow.com/questions/48590054/javafx-tableview-how-to-add-a-listener-to-checkbox-column

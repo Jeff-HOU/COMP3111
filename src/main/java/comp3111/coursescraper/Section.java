@@ -8,8 +8,6 @@ public class Section {
 	private String courseCode;
 	private String courseName;
 	private String id; // 1809
-	private String courseCode;
-	private String courseName;
 	private String code; //L1 LA1 T1
 	private ArrayList<Slot> slots;
 	private ArrayList<Instructor> instructors;
@@ -92,28 +90,19 @@ public class Section {
 	public int getNumSlots() {
 		return slots.size();
 	}
-	public void setCourseCode(String s) {
-		courseCode = s;
-	}
+
 	public String getCourseCode() {
 		return courseCode;
 	}
 	public void setCourseName(String s) {
 		courseName = s;
 	}
-	public String getCourseName() {
-		return courseName;
-	}
+
 	
 	public void setCourseCode(String s) {
 		courseCode = s;
 	}
-	public String getCourseCode() {
-		return courseCode;
-	}
-	public void setCourseName(String s) {
-		courseName = s;
-	}
+
 	public String getCourseName() {
 		return courseName;
 	}
