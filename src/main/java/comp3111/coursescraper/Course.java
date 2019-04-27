@@ -13,11 +13,39 @@ public class Course {
   
 	private ArrayList<Section> sections;
 	
+	private double sfq;
+	private String courseCode;
+
+
+  	public void setCourseCode(String s)
+	{
+		this.courseCode=s;
+
+  	}
+
+  	public void setSfq(Double sfq)
+	{
+		this.sfq=sfq;
+
+  	}
+
+
+  	public String getCourseCode() {
+		return courseCode;
+	}
+	public double getSfq() {
+		return sfq;
+	}
+	
+	
 	public Course() {
 		sections = new ArrayList<Section>();
 		cc4y = false;
 		tla = false;
 		noexclusion = false;
+		sfq=0;
+		courseCode="";
+
 
 	}
 	public boolean hasSection(Section s)
