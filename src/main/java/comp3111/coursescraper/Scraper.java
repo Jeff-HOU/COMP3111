@@ -185,29 +185,42 @@ public class Scraper {
 		if (s.charAt(0) == 'T') return true;
 		if (s.charAt(0) == 'L' && s.charAt(1) == 'A') return true;
 		return false;
+	}
 
-	public Vector<String> scrapeSubject(String baseurl, String term) throws PageNotFoundError{
+	public Vector<String> scrapeSubject(String baseurl, String term) throws PageNotFoundError, UrlNotValidError, TermNotValidError, UnknownHostException {
 		try {
+			if (!isValidUrl(baseurl)) throw new UrlNotValidError(baseurl);
+			if (!isValidTerm(term)) throw new TermNotValidError(term);
+			if (!isPageFound(baseurl + "/" + term + "/")) throw new PageNotFoundError(baseurl + "/" + term + "/");
 			HtmlPage page = client.getPage(baseurl + "/" + term+"/");
 			List<?> items = (List<?>) page.getByXPath("//div[@class='depts']");
 			Vector<String> subjects = new Vector<String>();
 			HtmlElement htmlItem = (HtmlElement) items.get(0);
 			List<?> titles = htmlItem.getByXPath(".//a");
 			for(int i=0;i<titles.size();i++) {
-				System.out.println(titles.get(i).toString().substring(57, 61));
+				//System.out.println(titles.get(i).toString().substring(57, 61));
 				subjects.add(titles.get(i).toString().substring(57, 61));
 			}
 			return subjects;
 		}catch (Exception e) {
-			String msg = e.getMessage();
-			if (msg.contains("404")) {
-				throw new PageNotFoundError("404");
+			if (e instanceof UrlNotValidError) {
+				throw new UrlNotValidError(e.getMessage());
+			} else if (e instanceof TermNotValidError) {
+				throw new TermNotValidError(e.getMessage());
+			} else if (e instanceof UnknownHostException) {
+				throw new UnknownHostException(e.getMessage());
+			} else if (e instanceof PageNotFoundError) {
+				throw new PageNotFoundError(e.getMessage());
+//			String msg = e.getMessage();
+//			if (msg.contains("404")) {
+//				throw new PageNotFoundError("404");
 			} else {
-				 System.out.println(e);
-			     StackTraceElement[] arr = e.getStackTrace();
-			     for(int i=0; i<arr.length; i++){
-			       System.out.println(arr[i].toString());
-			     }
+//				System.out.println(e.);
+//				System.out.println(e);
+//			     StackTraceElement[] arr = e.getStackTrace();
+//			     for(int i=0; i<arr.length; i++){
+//			       System.out.println(arr[i].toString());
+//			     }
 			}
 		}
 		return null;
