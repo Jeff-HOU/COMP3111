@@ -497,6 +497,115 @@ public class Controller {
 
     @FXML
     void findSfqEnrollCourse() {
+    	WebClient client = new WebClient();
+		client.getOptions().setCssEnabled(false);
+		client.getOptions().setJavaScriptEnabled(false);
+		String searchUrl = textfieldSfqUrl.getText();
+		try {
+			HtmlPage page = client.getPage(searchUrl);
+			List<?> items=(List<?>) page.getByXPath("//table");
+			Vector<Section> sectionlist=new Vector<Section>();
+			for(int i=2;i<items.size()-1;i++)
+			{
+				HtmlElement htmlItem= (HtmlElement) items.get(i);
+				List<?> trs=(List<?>) htmlItem.getByXPath(".//*[count(td)=6 and not(@style)]");				      
+
+  				for(int j=0;j<trs.size();j=j+1)
+				{
+					HtmlElement element = (HtmlElement) trs.get(j);
+					List<?> tds=(List<?>) element.getByXPath(".//td");
+					HtmlElement course=(HtmlElement) tds.get(0);
+					String courseCode=course.asText().replaceAll(" ","");	
+//					System.out.println(courseCode);
+					HtmlElement numSection=(HtmlElement) tds.get(5);
+					String numOfSect=numSection.asText();
+					int numOfSection=Integer.valueOf(numOfSect);
+					int k=0;
+//					System.out.println("numofSection"+numOfSect);
+					while(k<numOfSection)
+					{
+
+ 							element=(HtmlElement) element.getFirstByXPath(".//following-sibling::tr[1]");
+//							System.out.println("ssss~~~~4");
+							List<?> tds2=(List<?>) element.getByXPath(".//td");
+
+ 								HtmlElement Section=(HtmlElement) tds2.get(1);
+								String SectionCode=Section.asText().replaceAll(" ", "");
+//								System.out.println(SectionCode+"***");
+								if(SectionCode!=null&&(!SectionCode.isEmpty()))
+								{
+									HtmlElement score = (HtmlElement) tds2.get(3);					      
+									String TxtScore=score.asText();
+									String insScore=TxtScore.substring(0, 4);
+									k=k+1;
+									if (insScore.charAt(0)!='-')
+									{
+										Section asection=new Section();
+										asection.setCourseCode(courseCode);
+//										System.out.println(SectionCode);
+										asection.setcode(SectionCode);															            
+										asection.setSecSfq(Double.valueOf(insScore));
+										sectionlist.add(asection);
+									}
+								}							      
+
+  					}
+
+  				}				
+
+  			}
+//			System.out.println("ssss~~~~outsidefor");
+			Vector<Course> courses=new Vector<Course>();
+			for(Section section: sectionlist) {
+//				System.out.println("～～insidefor");
+				int flag=0;
+				for(Course c:courses) 
+				{		
+//					System.out.println("～～inside2for");
+					if (section.getCourseCode().equals(c.getCourseCode()))
+					{
+						double averageSfq=(c.getSfq()*c.getNumSections()+section.getSecSfq())/(c.getNumSections()+1);
+						c.addSection(section);
+ 						c.setSfq(averageSfq);
+						flag=1;
+						break;
+					}
+				}	
+//				System.out.println("～～finish2for");
+				if(flag==0)
+				{
+					Course newcourse=new Course();
+					newcourse.addSection(section);
+					newcourse.setCourseCode(section.getCourseCode());
+					newcourse.setSfq(section.getSecSfq());
+					courses.add(newcourse);
+				}
+			}
+//			System.out.println("～～finishthefirstfor");
+
+
+
+  			for(Course k: courses)
+			{	
+				for(SectionsToList s: enrolledSection)
+				{
+//					System.out.println(k.getCourseCode().replaceAll(" ", "").equals(s.getCourseCode().replaceAll(" ", ""))+k.getCourseCode()+s.getCourseCode());
+					if(k.getCourseCode().replaceAll(" ", "").equals(s.getCourseCode().replaceAll(" ", "")))
+					{
+						textAreaConsole.appendText("Course Code: "  + k.getCourseCode()+ "\t SFQ: " + k.getSfq()+"\n");				     					      
+//						textAreaConsole.appendText("111++~~~");
+//						System.out.println("ssss~~~~");
+					}
+
+ 				}
+
+ 			}
+
+
+
+  		}catch(Exception e) {
+			e.printStackTrace();
+		}
 
     }
 

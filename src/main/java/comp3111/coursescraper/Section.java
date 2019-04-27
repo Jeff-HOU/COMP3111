@@ -11,12 +11,19 @@ public class Section {
 	private String code; //L1 LA1 T1
 	private ArrayList<Slot> slots;
 	private ArrayList<Instructor> instructors;
-	
+	private double secsfq;
 	public Section() {
 		slots = new ArrayList<Slot>();
 		instructors = new ArrayList<Instructor>();
+		secsfq=0;
+		
 	}
-	
+	public double getSecSfq() {
+		return secsfq;
+	}
+	public void setSecSfq(double sfq) {
+		this.secsfq =sfq;
+	}
 	@Override
 	public Section clone() {
 		Section s = new Section();
@@ -26,6 +33,7 @@ public class Section {
 		s.instructors = (ArrayList<Instructor>)this.instructors.clone();
 		s.courseCode = this.courseCode;
 		s.courseName = this.courseName;
+		s.secsfq=this.secsfq;
 		return s;
 	}
 	public boolean equals(Section sec) {
