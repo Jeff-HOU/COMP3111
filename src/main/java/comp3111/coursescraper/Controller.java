@@ -16,6 +16,9 @@ import javafx.scene.layout.AnchorPane;
 
 import com.gargoylesoftware.htmlunit.html.DomText;
 import java.util.Vector;
+
+import javax.swing.SwingUtilities;
+
 import java.util.HashSet;
 import java.net.URLEncoder;
 import java.net.URL;
@@ -34,6 +37,7 @@ import javafx.scene.layout.AnchorPane;
 import com.gargoylesoftware.htmlunit.html.DomText;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -82,6 +86,8 @@ import java.net.UnknownHostException;
  */
 public class Controller {
 	private boolean first=true;
+	private double progress = 0;
+	private int totalcourse = 0;
     @FXML
     private Tab tabMain;
 
@@ -141,6 +147,7 @@ public class Controller {
     		"#filterCCC", "#filterNOEx", "#filterTLA"
     };
     private Vector<Section> selectedSection = new Vector<Section>();
+    private Vector<Section> allsections = new Vector<Section>();
     /**
      * enrolled sections
      */
@@ -153,6 +160,11 @@ public class Controller {
 //        		filterCheckBox.put(s, false);
 //        	}
 //    	}
+    	for(Course c: course) {
+    		for(int j=0;j<c.getNumSections();j++)
+    			allsections.add(c.getSection(j));
+    	}
+    	
     	AnchorPane ap = (AnchorPane)tabFilter.getContent();
     	for (String s: filterCheckBoxName) {
     		filterCheckBox.put(s, ((CheckBox) ap.lookup(s)).isSelected());
@@ -339,6 +351,7 @@ public class Controller {
     			if (sectionsToList.get(i).equals(sectl)) {
 //    				System.out.print(i + " ");
     				sectionsToList.remove(i);
+    				showTable();
     				break;
     			}
     		}
@@ -376,22 +389,32 @@ public class Controller {
     		    	    		else {
     		    	    			for (int i = 0; i < enrolledSection.size(); i++) {
     		    	        			if (enrolledSection.get(i).equals(sectl)) {
-//    		    	        				System.out.print(i + " ");
+    		    	        				//AnchorPane ap = (AnchorPane)tabTimetable.getContent();
+    		    	        				//for(Section s: allsections) {
+    		    	        				//	if(s.getCourseCode()==sectl.getCourseCode()&&s.getcode()==sectl.getSection()) {
+    		    	        				//		for(int j=0;j<s.getNumSlots();j++)
+    		    	        				//			ap.getChildren().remove(s.getSlot(j).la);
+    		    	        				//	}
+    		    	        				//}
     		    	        				enrolledSection.remove(i);
+    		    	        				showTable();
     		    	        				break;
     		    	        			}
     		    	        		}
     		    	    		}
+    		    				showTable();
     		    				System.out.println("Enrolled sections:");
     		    		    	for (SectionsToList sectl: enrolledSection) {
     		    		    		System.out.println(sectl.getCourseCode() + " " + sectl.getSection());
     		    		    	}
     		        	    }
     		    		});
+    					showTable();
     					return new SimpleObjectProperty<CheckBox>(checkbox);
     				}
     			);
     		}}
+    	showTable();
     	}
 
     
@@ -416,20 +439,125 @@ public class Controller {
     	selectCourse();
     }
 
+    void updateprogress() {
+    	progressbar.setProgress(progress);
+    }
+    
+    class BarThread extends Thread {
+    	  ProgressBar progressBar;
+
+    	  public BarThread(ProgressBar bar) {
+    	    progressBar = bar;
+    	  }
+
+    	  public void run() {
+
+    	      try {
+    	    	  totalcourse = 0;
+      			  Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
+    	    	  for(String a: subjects) {
+      				try {
+      		    		//textAreaConsole.setText("");
+      		    		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),a);
+      		    		totalcourse+=vec.get(0).size();
+      		    		course.clear();
+      		    		course.addAll((Vector<Course>) vec.get(0));
+
+      		    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
+      		    		int allNumSections = 0;
+      		    		LocalTime TU310 = LocalTime.parse("03:10PM", DateTimeFormatter.ofPattern("hh:mma", Locale.US));
+      		    		HashSet<Instructor> ins_tu310 = (HashSet<Instructor>)ins.clone(); //???
+      		    		for (Course c : course) {
+      		    			allNumSections += c.getNumSections();
+      		        		String newline = c.getTitle() + "\n";
+      		        		for (int i = 0; i < c.getNumSections(); i++) {
+      		        			Section sec = c.getSection(i);
+//      		        			newline += "Slot " + i + ": " + t + "\n";
+      		        			newline += sec;
+      		        			for (int j = 0; j < sec.getNumSlots(); j++) {
+      		        				Slot s = sec.getSlot(j);
+      		        				if (s.getDay() == 1 && s.getStart().compareTo(TU310) <= 0 && s.getEnd().compareTo(TU310) >= 0) {
+      		        					for (Instructor inst: sec.getInstructors())
+      		        						ins_tu310.remove(inst);
+      		        				}
+      		        			}
+      		        		}
+      		        		//textAreaConsole.setText(textAreaConsole.getText() + "\n" + newline); // remove this and change the appendText below to setText???
+      		        		javafx.application.Platform.runLater( () -> {
+      		        			//String newline = c.getTitle() + "\n";
+      		        			textAreaConsole.setText(textAreaConsole.getText() + "\n" + c.getTitle());
+          		        		for (int i = 0; i < c.getNumSections(); i++) {
+          		        			Section sec = c.getSection(i);
+//          		        			newline += "Slot " + i + ": " + t + "\n";
+          		        			textAreaConsole.setText(textAreaConsole.getText() + "\n" + sec);
+          		        			//newline += sec;
+          		        		}
+          		        		//textAreaConsole.setText(textAreaConsole.getText() + "\n" + newline);
+      		        		} );
+      		    		}
+      		        	
+      		    	} catch (Exception e) {
+      		    		if (e instanceof PageNotFoundError) {
+      		    			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
+      		    			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
+      		        		Label msg = new Label("404 NOT FOUND");
+      		        		ap.getChildren().add(msg);
+      		    		} else if (e instanceof UrlNotValidError) {
+      		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		} else if (e instanceof TermNotValidError) {
+      		    			textAreaConsole.setText("Term you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		} else if (e instanceof SubjectNotValidError) {
+      		    			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		} else if (e instanceof UnknownHostException) {
+      		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		}
+      		    		
+      		    	}
+      				System.out.println("SUBJECT is done");
+      				progress+=1/(double)subjects.size();	
+      				progressBar.setProgress(progress);
+      				Thread.sleep(500);
+      				
+    	    	  }
+    	    	  textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
+    	      } catch (Exception e) {
+		    		if (e instanceof PageNotFoundError) {
+		    			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
+		    			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
+		        		Label msg = new Label("404 NOT FOUND");
+		        		ap.getChildren().add(msg);
+		    		} else if (e instanceof UrlNotValidError) {
+		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		} else if (e instanceof TermNotValidError) {
+		    			textAreaConsole.setText("Term you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		} else if (e instanceof SubjectNotValidError) {
+		    			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		} else if (e instanceof UnknownHostException) {
+		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		}
+		    		
+		    	}
+    	    
+    	  }
+    }
       
     @FXML
     void allSubjectSearch()  {
     	buttonSfqEnrollCourse.setDisable(false);
+    	//textAreaConsole.setText("");
     	try {
     		if(first) {
+    			//System.out.println("first is true");
     			Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
-    			textAreaConsole.setText(subjects.toString());
+    			//textAreaConsole.setText(subjects.toString());
     			textAreaConsole.setText("Total Number of Categories/Code Prefix: "+subjects.size());
+    			progress = 0;
+    			progressbar.setProgress(progress);
     			first = false;
     		}
     		else {
     			first = true;
-    			double progress = 0;
+    			/*
     			int totalcourse = 0;
     			Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
     			for(String a: subjects) {
@@ -462,32 +590,6 @@ public class Controller {
     		        		textAreaConsole.setText(textAreaConsole.getText() + "\n" + newline); // remove this and change the appendText below to setText???
     		        	}
     		        	
-    		    		//String searchInfo = "";
-    		    		//searchInfo += "Total Number of difference sections in this search: " + allNumSections + "\n";
-    		    		//searchInfo += "Total Number of Course in this search: " + course.size() + "\n";
-    		    		//searchInfo += "Instructors who has teaching assignment this term but does not need to teach at Tu 3:10pm:\n";
-    		    		//for (Instructor inst: ins_tu310) {
-    		    		//	searchInfo += inst + "\n"; // è¯´å¥½çš„ä¸�ä¼šé‡�å¤�å‘¢ï¼Ÿï¼Ÿï¼Ÿ
-    		    		//}
-    		    		//textAreaConsole.appendText(searchInfo);
-    		    		
-    		        	//Add a random block on Saturday
-    		        	AnchorPane ap = (AnchorPane)tabTimetable.getContent();
-    		        	Label randomLabel = new Label("COMP1022\nL1");
-    		        	Random r = new Random();
-    		        	double start = (r.nextInt(10) + 1) * 20 + 40;
-
-    		        	randomLabel.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-    		        	randomLabel.setLayoutX(600.0);
-    		        	randomLabel.setLayoutY(start);
-    		        	randomLabel.setMinWidth(100.0);
-    		        	randomLabel.setMaxWidth(100.0);
-    		        	randomLabel.setMinHeight(60);
-    		        	randomLabel.setMaxHeight(60);
-    		        
-    		        	ap.getChildren().addAll(randomLabel);
-    		        	AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
-    		        	ap_tabstat.getChildren().clear();
     		    	} catch (Exception e) {
     		    		if (e instanceof PageNotFoundError) {
     		    			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
@@ -507,15 +609,23 @@ public class Controller {
     		    	}
     		    System.out.println("SUBJECT is done");
     		    progress+=1/(double)subjects.size();
-    		    progressbar.setProgress(progress);
+    		    //updateprogress();
+    		    //progressbar.setProgress(progress);
+    		     
+    		     */
+    			//System.out.println("SUBJECT is done");
+    		    
+    		    Thread stepper = new BarThread(progressbar);
+    	        stepper.start();
+    	        
+    	        //textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
     			}
-    			//textAreaConsole.setText("no way");
-    			textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
-    		}
+    			//textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
+    		//}
     	}catch (Exception e) {
     		if (e instanceof PageNotFoundError) {
     			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
-    			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
+    			AnchorPane ap = (AnchorPane)tabAllSubject.getContent();
         		Label msg = new Label("404 NOT FOUND");
         		ap.getChildren().add(msg);
     		} else if (e instanceof UrlNotValidError) {
@@ -731,6 +841,11 @@ public class Controller {
     	buttonSfqEnrollCourse.setDisable(false);
     	try {
     		textAreaConsole.setText("");
+    		
+    		
+    		Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
+			textAreaConsole.setText("Total Number of Categories/Code Prefix: "+subjects.size());
+			
     		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),textfieldSubject.getText());
 
     		course.clear();
@@ -768,22 +883,22 @@ public class Controller {
     		textAreaConsole.appendText(searchInfo);
     		
         	//Add a random block on Saturday
-        	AnchorPane ap = (AnchorPane)tabTimetable.getContent();
-        	Label randomLabel = new Label("COMP1022\nL1");
-        	Random r = new Random();
-        	double start = (r.nextInt(10) + 1) * 20 + 40;
+        	//AnchorPane ap = (AnchorPane)tabTimetable.getContent();
+        	///Label randomLabel = new Label("COMP1022\nL1");
+        	//Random r = new Random();
+        	//double start = (r.nextInt(10) + 1) * 20 + 40;
 
-        	randomLabel.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-        	randomLabel.setLayoutX(600.0);
-        	randomLabel.setLayoutY(start);
-        	randomLabel.setMinWidth(100.0);
-        	randomLabel.setMaxWidth(100.0);
-        	randomLabel.setMinHeight(60);
-        	randomLabel.setMaxHeight(60);
+        	//randomLabel.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        	//randomLabel.setLayoutX(600.0);
+        	//randomLabel.setLayoutY(start);
+        	//randomLabel.setMinWidth(100.0);
+        	//randomLabel.setMaxWidth(100.0);
+        	//randomLabel.setMinHeight(60);
+        	//randomLabel.setMaxHeight(60);
         
-        	ap.getChildren().addAll(randomLabel);
-        	AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
-        	ap_tabstat.getChildren().clear();
+        	//ap.getChildren().addAll(randomLabel);
+        	//AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
+        	//ap_tabstat.getChildren().clear();
     	} catch (Exception e) {
     		if (e instanceof PageNotFoundError) {
     			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
@@ -803,6 +918,60 @@ public class Controller {
     	}
     	
     	
+    	
+    }
+    void showTable() {
+    	for(Section sec: allsections) {
+    		AnchorPane ap = (AnchorPane)tabTimetable.getContent();
+    		for(int i=0;i<sec.getNumSlots();i++) {
+    			ap.getChildren().remove(sec.getSlot(i).la);
+    		}
+    	}
+    	for(Section sec: selectedSection) {
+    	//for(Section sec: allsections) {
+    		for(SectionsToList stl: enrolledSection) {
+    			AnchorPane ap = (AnchorPane)tabTimetable.getContent();
+    			if(sec.getCourseCode()==stl.getCourseCode()&&sec.getcode()==stl.getSection()&&stl.getEnrolled()==false&&sec.getSlot(0).la!=null) {
+    				System.out.println("im removing");
+    				for(int i =0;i<sec.getNumSlots();i++) {
+    					ap.getChildren().remove(sec.getSlot(i).la);
+    				}
+    				sec.draw = false;
+    			}
+    			if(sec.getCourseCode()==stl.getCourseCode()&&sec.getcode()==stl.getSection()&&stl.getEnrolled()) {
+    				sec.draw =true;
+    				for(int i=0;i<sec.getNumSlots();i++) {
+ 
+    					Label randomLabel = new Label(sec.getCourseCode()+"\n"+sec.getcode());
+    					
+    					if(sec.getSlot(i).getDay()== 0) randomLabel.setLayoutX(100.0);
+    					if(sec.getSlot(i).getDay()== 1) randomLabel.setLayoutX(200.0);
+    					if(sec.getSlot(i).getDay()== 2) randomLabel.setLayoutX(300.0);
+    					if(sec.getSlot(i).getDay()== 3) randomLabel.setLayoutX(400.0);
+    					if(sec.getSlot(i).getDay()== 4) randomLabel.setLayoutX(500.0);
+    					if(sec.getSlot(i).getDay()== 5) randomLabel.setLayoutX(600.0);
+    					
+    					
+    					//System.out.println((sec.getSlot(i).getStartHour()-7)*20+sec.getSlot(i).getStartMinute()/3);
+    					double start = (sec.getSlot(i).getStartHour()-7)*20+sec.getSlot(i).getStartMinute()/3;
+    					//double start = 80;
+    					//double end = 120;
+    					double end = (sec.getSlot(i).getEndHour()-7)*20+sec.getSlot(i).getEndMinute()/3;
+    					randomLabel.setBackground(new Background(new BackgroundFill(sec.getColor(), CornerRadii.EMPTY, Insets.EMPTY)));
+    					randomLabel.setLayoutY(start);
+    					randomLabel.setMinWidth(100);
+    					randomLabel.setMaxWidth(100);
+    					randomLabel.setMinHeight(end-start);
+    					randomLabel.setMaxHeight(end-start);
+    	        
+    					sec.getSlot(i).la = randomLabel;
+    					ap.getChildren().addAll(randomLabel);
+    					AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
+    					ap_tabstat.getChildren().clear();
+    				}
+    			}
+    		}
+    	}
     	
     }
 

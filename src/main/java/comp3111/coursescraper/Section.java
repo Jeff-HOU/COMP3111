@@ -1,6 +1,9 @@
 package comp3111.coursescraper;
 
+import javafx.scene.paint.Color;
+import java.util.Random;
 import java.util.ArrayList;
+import javafx.scene.control.Label;
 
 /**
  * Section class to store sections of a course.
@@ -15,9 +18,13 @@ public class Section {
 	private String id; // 1809
 	private String code; //L1 LA1 T1
 	private ArrayList<Slot> slots;
+	private Color c;
 	private ArrayList<Instructor> instructors;
 	private double secsfq;
+	public boolean draw=false;
 	public Section() {
+		Random r = new Random();
+		c = Color.color((double)r.nextInt(Integer.MAX_VALUE)/(Integer.MAX_VALUE-1), (double)r.nextInt(Integer.MAX_VALUE)/(Integer.MAX_VALUE-1), (double)r.nextInt(Integer.MAX_VALUE)/(Integer.MAX_VALUE-1),0.5);
 		slots = new ArrayList<Slot>();
 		instructors = new ArrayList<Instructor>();
 		secsfq=0;
@@ -39,6 +46,7 @@ public class Section {
 		Section s = new Section();
 		s.id = this.id;
 		s.code = this.code;
+		s.c = this.c;
 		s.slots = (ArrayList<Slot>)this.slots.clone();
 		s.instructors = (ArrayList<Instructor>)this.instructors.clone();
 		s.courseCode = this.courseCode;
@@ -85,7 +93,10 @@ public class Section {
 			return slots.get(i);
 		return null;
 	}
-	/**
+	public Color getColor() {
+		return c;
+	}
+  /**
 	 * @author Jeff
 	 * @param i a new instructor to be added to this section
 	 */
