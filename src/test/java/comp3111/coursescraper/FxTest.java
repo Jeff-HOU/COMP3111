@@ -61,4 +61,21 @@ public class FxTest extends ApplicationTest {
 		TextArea ta = (TextArea)s.lookup("#textAreaConsole");
 		assertTrue(!ta.getText().trim().isEmpty());
 	}
+	
+	@Test
+	public void testAllSearchTag() {
+		clickOn("#tabAllSubject");
+		//TextField tf_url = (TextField) s.lookup("#textfieldURL");
+		//tf_url.setText("https://w5.ab.ust.hk/wcq/cgi-bin/");
+		//TextField tf_term = (TextField) s.lookup("#textfieldTerm");
+		//tf_term.setText("1830");
+		//TextField tf_subject = (TextField) s.lookup("#textfieldSubject");
+		//tf_subject.setText("COMP");
+		//clickOn("#allSubjectSearch");
+		
+		sleep(5000);
+		TextArea ta = (TextArea)s.lookup("#textAreaConsole");
+		assertTrue(!ta.getText().trim().isEmpty());
+		//assertTrue(ta.getText().substring(0, 39)=="Total Number of Categories/Code Prefix: ");
+	}
 }

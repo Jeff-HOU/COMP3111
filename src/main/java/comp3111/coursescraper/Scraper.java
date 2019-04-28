@@ -189,16 +189,19 @@ public class Scraper {
 
 	public Vector<String> scrapeSubject(String baseurl, String term) throws PageNotFoundError, UrlNotValidError, TermNotValidError, UnknownHostException {
 		try {
+			//System.out.println("enter");
 			if (!isValidUrl(baseurl)) throw new UrlNotValidError(baseurl);
 			if (!isValidTerm(term)) throw new TermNotValidError(term);
 			if (!isPageFound(baseurl + "/" + term + "/")) throw new PageNotFoundError(baseurl + "/" + term + "/");
 			HtmlPage page = client.getPage(baseurl + "/" + term+"/");
+			//HtmlPage page = client.getPage(baseurl);
+			//System.out.println(page.asText());
 			List<?> items = (List<?>) page.getByXPath("//div[@class='depts']");
 			Vector<String> subjects = new Vector<String>();
 			HtmlElement htmlItem = (HtmlElement) items.get(0);
 			List<?> titles = htmlItem.getByXPath(".//a");
 			for(int i=0;i<titles.size();i++) {
-				//System.out.println(titles.get(i).toString().substring(57, 61));
+				System.out.println(titles.get(i).toString().substring(57, 61));
 				subjects.add(titles.get(i).toString().substring(57, 61));
 			}
 			return subjects;

@@ -16,6 +16,9 @@ import javafx.scene.layout.AnchorPane;
 
 import com.gargoylesoftware.htmlunit.html.DomText;
 import java.util.Vector;
+
+import javax.swing.SwingUtilities;
+
 import java.util.HashSet;
 import java.net.URLEncoder;
 import java.net.URL;
@@ -34,6 +37,7 @@ import javafx.scene.layout.AnchorPane;
 import com.gargoylesoftware.htmlunit.html.DomText;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -74,8 +78,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.net.UnknownHostException;
+
 public class Controller {
 	private boolean first=true;
+	private double progress = 0;
     @FXML
     private Tab tabMain;
 
@@ -425,16 +431,19 @@ public class Controller {
     @FXML
     void allSubjectSearch()  {
     	buttonSfqEnrollCourse.setDisable(false);
+    	//textAreaConsole.setText("");
     	try {
     		if(first) {
+    			//System.out.println("first is true");
     			Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
-    			textAreaConsole.setText(subjects.toString());
+    			//textAreaConsole.setText(subjects.toString());
     			textAreaConsole.setText("Total Number of Categories/Code Prefix: "+subjects.size());
+    			progress = 0;
     			first = false;
     		}
     		else {
     			first = true;
-    			double progress = 0;
+    			
     			int totalcourse = 0;
     			Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
     			for(String a: subjects) {
@@ -484,10 +493,39 @@ public class Controller {
     		    		}
     		    		
     		    	}
+    				
     		    System.out.println("SUBJECT is done");
     		    progress+=1/(double)subjects.size();
     		    progressbar.setProgress(progress);
+    		    class BarThread extends Thread {
+    		 
+
+    		    	  ProgressBar progressBar;
+
+    		    	  public BarThread(ProgressBar bar) {
+    		    	    progressBar = bar;
+    		    	  }
+
+    		    	  public void run() {
+    		
+    		    
+    		    	      try {
+    		    	        progressBar.setProgress(progress);
+
+    		    	        Thread.sleep(500);
+    		    	      } catch (InterruptedException ignoredException) {
+    		    	      
+    		    	    }
+    		    	  }
+    		    	}
+    		    ActionListener actionListener = new ActionListener() {
+    		        public void actionPerformed(ActionEvent e) {
+    		          Thread stepper = new BarThread(progressbar);
+    		          stepper.start();
+    		        }
+    		      };
     			}
+    			
     			//textAreaConsole.setText("no way");
     			textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
     		}
@@ -706,6 +744,11 @@ public class Controller {
     	buttonSfqEnrollCourse.setDisable(false);
     	try {
     		textAreaConsole.setText("");
+    		
+    		
+    		Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
+			textAreaConsole.setText("Total Number of Categories/Code Prefix: "+subjects.size());
+			
     		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),textfieldSubject.getText());
 
     		course.clear();
