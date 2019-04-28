@@ -113,6 +113,7 @@ public class FxTest extends ApplicationTest {
 	
 	@Test
 	public void testShowTable() {
+		
 		clickOn("#tabMain");
 		TextField tf_url = (TextField) s.lookup("#textfieldURL");
 		tf_url.setText("https://w5.ab.ust.hk/wcq/cgi-bin/");
@@ -124,15 +125,15 @@ public class FxTest extends ApplicationTest {
 		sleep(5000);
 		TextArea ta = (TextArea)s.lookup("#textAreaConsole");
 		
-		//clickOn("tabFilter");
-		//clickOn("filterSelectAll");
-		//clickOn("filterSelectAll");
+		clickOn("#tabFilter");
+		clickOn("#filterSelectAll");
+		clickOn("#filterSelectAll");
 		
-		//clickOn("tabList");
+		clickOn("#tabList");
 		
 		
 		
-		//clickOn("tabTimetable");
+		clickOn("#tabTimetable");
 		
 	}
 	

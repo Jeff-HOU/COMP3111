@@ -132,13 +132,6 @@ public class ItemTest {
 	}
 	
 	@Test
-	public void testSlotLabel() {
-		Slot s = new Slot();
-		s.la = new Label("COMP");
-		assertEquals(s.la.getText(), "COMP");
-	}
-	
-	@Test
 	public void testCourseSection() {
 		Course c = new Course();
 		c.setCourseCode("COMP1001");
@@ -374,26 +367,30 @@ public class ItemTest {
 		Collections.sort(sectionsToList, new SortSectionsToList());
 		assertEquals(sectionsToList.get(0),slt2);
 	}
-	/*@Test
+	@Test
 	public void testAmPm() {
 		Slot s = new Slot();
 		s.setDay(1);s.setStart("02:00AM");s.setEnd("04:00AM");s.setVenue("LTJ");
 		Slot s2 = s.clone();
 		Slot s3 = new Slot();
-		s3.setDay(1);s3.setStart("13:00AM");s3.setEnd("15:00AM");s3.setVenue("LTK");
+		s3.setDay(1);s3.setStart("01:00PM");s3.setEnd("03:00PM");s3.setVenue("LTK");
 		
 		Section sec = new Section();
-		sec.setid("1809");
-		sec.addSlot(s);
-		//sec.addSlot(s2);sec.addSlot(s3);
+		sec.setid("1809");sec.setcode("L1");sec.setCourseCode("COMP1001");sec.setCourseName("Introduction");
+		sec.addSlot(s);sec.addSlot(s2);sec.addSlot(s3);
 		Section sec2 = new Section();
 		sec2.addSlot(s2);sec2.addSlot(s3);
+		Section sec3 = new Section();
+		sec3.addSlot(s3);
 		
 		Course c = new Course();
-		c.addSection(sec); c.addSection(sec2);
-		
+		c.setCourseCode("COMP1001");
+		c.addSection(sec); c.addSection(sec2);c.addSection(sec3);
+		//c.getSectionsThatHaveAMSlots();
 		assertTrue(c.getSectionsThatHaveAMSlots().size()==2);
-	}*/
+		assertTrue(c.getSectionsThatHavePMSlots().size()==3);
+		c.getSectionsThatHaveAMandPMSlots();
+	}
 	
 	
 }
