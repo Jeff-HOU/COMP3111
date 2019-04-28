@@ -82,6 +82,7 @@ import java.net.UnknownHostException;
 public class Controller {
 	private boolean first=true;
 	private double progress = 0;
+	private int totalcourse = 0;
     @FXML
     private Tab tabMain;
 
@@ -427,6 +428,107 @@ public class Controller {
     	selectCourse();
     }
 
+    void updateprogress() {
+    	progressbar.setProgress(progress);
+    }
+    
+    class BarThread extends Thread {
+    	  ProgressBar progressBar;
+
+    	  public BarThread(ProgressBar bar) {
+    	    progressBar = bar;
+    	  }
+
+    	  public void run() {
+
+    	      try {
+    	    	  totalcourse = 0;
+      			  Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
+    	    	  for(String a: subjects) {
+      				try {
+      		    		//textAreaConsole.setText("");
+      		    		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),a);
+      		    		totalcourse+=vec.get(0).size();
+      		    		course.clear();
+      		    		course.addAll((Vector<Course>) vec.get(0));
+
+      		    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
+      		    		int allNumSections = 0;
+      		    		LocalTime TU310 = LocalTime.parse("03:10PM", DateTimeFormatter.ofPattern("hh:mma", Locale.US));
+      		    		HashSet<Instructor> ins_tu310 = (HashSet<Instructor>)ins.clone(); //???
+      		    		for (Course c : course) {
+      		    			allNumSections += c.getNumSections();
+      		        		String newline = c.getTitle() + "\n";
+      		        		for (int i = 0; i < c.getNumSections(); i++) {
+      		        			Section sec = c.getSection(i);
+//      		        			newline += "Slot " + i + ": " + t + "\n";
+      		        			newline += sec;
+      		        			for (int j = 0; j < sec.getNumSlots(); j++) {
+      		        				Slot s = sec.getSlot(j);
+      		        				if (s.getDay() == 1 && s.getStart().compareTo(TU310) <= 0 && s.getEnd().compareTo(TU310) >= 0) {
+      		        					for (Instructor inst: sec.getInstructors())
+      		        						ins_tu310.remove(inst);
+      		        				}
+      		        			}
+      		        		}
+      		        		//textAreaConsole.setText(textAreaConsole.getText() + "\n" + newline); // remove this and change the appendText below to setText???
+      		        		javafx.application.Platform.runLater( () -> {
+      		        			//String newline = c.getTitle() + "\n";
+      		        			textAreaConsole.setText(textAreaConsole.getText() + "\n" + c.getTitle());
+          		        		for (int i = 0; i < c.getNumSections(); i++) {
+          		        			Section sec = c.getSection(i);
+//          		        			newline += "Slot " + i + ": " + t + "\n";
+          		        			textAreaConsole.setText(textAreaConsole.getText() + "\n" + sec);
+          		        			//newline += sec;
+          		        		}
+          		        		//textAreaConsole.setText(textAreaConsole.getText() + "\n" + newline);
+      		        		} );
+      		    		}
+      		        	
+      		    	} catch (Exception e) {
+      		    		if (e instanceof PageNotFoundError) {
+      		    			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
+      		    			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
+      		        		Label msg = new Label("404 NOT FOUND");
+      		        		ap.getChildren().add(msg);
+      		    		} else if (e instanceof UrlNotValidError) {
+      		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		} else if (e instanceof TermNotValidError) {
+      		    			textAreaConsole.setText("Term you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		} else if (e instanceof SubjectNotValidError) {
+      		    			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		} else if (e instanceof UnknownHostException) {
+      		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		}
+      		    		
+      		    	}
+      				System.out.println("SUBJECT is done");
+      				progress+=1/(double)subjects.size();	
+      				progressBar.setProgress(progress);
+      				Thread.sleep(500);
+      				
+    	    	  }
+    	    	  textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
+    	      } catch (Exception e) {
+		    		if (e instanceof PageNotFoundError) {
+		    			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
+		    			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
+		        		Label msg = new Label("404 NOT FOUND");
+		        		ap.getChildren().add(msg);
+		    		} else if (e instanceof UrlNotValidError) {
+		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		} else if (e instanceof TermNotValidError) {
+		    			textAreaConsole.setText("Term you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		} else if (e instanceof SubjectNotValidError) {
+		    			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		} else if (e instanceof UnknownHostException) {
+		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		}
+		    		
+		    	}
+    	    
+    	  }
+    }
       
     @FXML
     void allSubjectSearch()  {
@@ -439,11 +541,12 @@ public class Controller {
     			//textAreaConsole.setText(subjects.toString());
     			textAreaConsole.setText("Total Number of Categories/Code Prefix: "+subjects.size());
     			progress = 0;
+    			progressbar.setProgress(progress);
     			first = false;
     		}
     		else {
     			first = true;
-    			
+    			/*
     			int totalcourse = 0;
     			Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
     			for(String a: subjects) {
@@ -493,46 +596,25 @@ public class Controller {
     		    		}
     		    		
     		    	}
-    				
     		    System.out.println("SUBJECT is done");
     		    progress+=1/(double)subjects.size();
-    		    progressbar.setProgress(progress);
-    		    class BarThread extends Thread {
-    		 
-
-    		    	  ProgressBar progressBar;
-
-    		    	  public BarThread(ProgressBar bar) {
-    		    	    progressBar = bar;
-    		    	  }
-
-    		    	  public void run() {
-    		
+    		    //updateprogress();
+    		    //progressbar.setProgress(progress);
+    		     
+    		     */
+    			//System.out.println("SUBJECT is done");
     		    
-    		    	      try {
-    		    	        progressBar.setProgress(progress);
-
-    		    	        Thread.sleep(500);
-    		    	      } catch (InterruptedException ignoredException) {
-    		    	      
-    		    	    }
-    		    	  }
-    		    	}
-    		    ActionListener actionListener = new ActionListener() {
-    		        public void actionPerformed(ActionEvent e) {
-    		          Thread stepper = new BarThread(progressbar);
-    		          stepper.start();
-    		        }
-    		      };
+    		    Thread stepper = new BarThread(progressbar);
+    	        stepper.start();
+    	        
+    	        //textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
     			}
-    			
-    			//textAreaConsole.setText("no way");
-    			textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
-    		}
+    			//textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
+    		//}
     	}catch (Exception e) {
     		if (e instanceof PageNotFoundError) {
     			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
-    			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
+    			AnchorPane ap = (AnchorPane)tabAllSubject.getContent();
         		Label msg = new Label("404 NOT FOUND");
         		ap.getChildren().add(msg);
     		} else if (e instanceof UrlNotValidError) {

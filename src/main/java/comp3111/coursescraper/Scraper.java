@@ -201,7 +201,7 @@ public class Scraper {
 			HtmlElement htmlItem = (HtmlElement) items.get(0);
 			List<?> titles = htmlItem.getByXPath(".//a");
 			for(int i=0;i<titles.size();i++) {
-				System.out.println(titles.get(i).toString().substring(57, 61));
+				//System.out.println(titles.get(i).toString().substring(57, 61));
 				subjects.add(titles.get(i).toString().substring(57, 61));
 			}
 			return subjects;
