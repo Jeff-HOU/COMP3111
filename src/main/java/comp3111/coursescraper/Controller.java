@@ -74,6 +74,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.net.UnknownHostException;
+
+/**
+ * Main UI and function controller.
+ * @author Jeff
+ *
+ */
 public class Controller {
 	private boolean first=true;
     @FXML
@@ -135,6 +141,9 @@ public class Controller {
     		"#filterCCC", "#filterNOEx", "#filterTLA"
     };
     private Vector<Section> selectedSection = new Vector<Section>();
+    /**
+     * enrolled sections
+     */
     private Vector<SectionsToList> enrolledSection = new Vector<SectionsToList>();
     
     @FXML
@@ -305,7 +314,10 @@ public class Controller {
     	}
     	listCourse();
     }
-    
+    /**
+     * @author Jeff
+     * list selected sections on TableView
+     */
     void listCourse() { // a very important source: https://stackoverflow.com/questions/48590054/javafx-tableview-how-to-add-a-listener-to-checkbox-column
     	AnchorPane ap = (AnchorPane)tabList.getContent();
     	TableView tv = (TableView)ap.lookup("#listTableView");
@@ -709,7 +721,11 @@ public class Controller {
 		}
 
     }
-
+    
+    /**
+     * @author Jeff
+     * function handling searching single subject courses.
+     */
     @FXML
     void search() {
     	buttonSfqEnrollCourse.setDisable(false);
