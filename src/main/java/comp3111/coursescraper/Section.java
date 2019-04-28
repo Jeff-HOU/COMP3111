@@ -30,9 +30,22 @@ public class Section {
 		secsfq=0;
 		
 	}
+	 /**
+     * get the sfq value for the section
+     * 
+     * @return value of section sfq (double type)
+     * @author Ziyue
+     *
+     */
 	public double getSecSfq() {
 		return secsfq;
 	}
+	 /**
+     * set the sfq value for the course
+     * 
+     * @author Ziyue
+     *
+     */
 	public void setSecSfq(double sfq) {
 		this.secsfq =sfq;
 	}

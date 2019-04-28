@@ -154,12 +154,15 @@ public class Controller {
     private Vector<SectionsToList> enrolledSection = new Vector<SectionsToList>();
     
     @FXML
+    /**
+     * This function is used to select certain attribute of a course 
+     * 
+     * @return no return value
+     * @author Ziyue
+     *
+     */
     void selectCourse() {
-//    	if (filterCheckBox.isEmpty()) {
-//    		for (String s: filterCheckBoxName) {
-//        		filterCheckBox.put(s, false);
-//        	}
-//    	}
+
     	for(Course c: course) {
     		for(int j=0;j<c.getNumSections();j++)
     			allsections.add(c.getSection(j));
@@ -207,23 +210,16 @@ public class Controller {
 
     	Vector<Section> Day = new Vector<Section>();
     	for (Course c: course) {
-//    		System.out.println(c.getTitle());
+
     		Vector<Section> selectDayForCourse = new Vector<Section>();
     		int count=0;
     		for (int i = 0; i < Slot.DAYS.length; i++) {
     			if (filterCheckBox.get(filterCheckBoxName[i])) {
     				count++;
     				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
-//    				if (c.getSectionsThatHaveSlotOnDay(i).isEmpty()) {
-//    					selectDayForCourse.clear();
-//    					break;
-//    				}
+
     				if (count==1) selectDayForCourse.addAll(c.getSectionsThatHaveSlotOnDay(i));
-//    				if (c.getSectionsThatHaveSlotOnDay(i).isEmpty())
-//    				{
-//    					selectDayForCourse.clear();
-//    					break;
-//    				}
+
     				else selectDayForCourse.retainAll(c.getSectionsThatHaveSlotOnDay(i));
     			}
     		}
@@ -241,36 +237,7 @@ public class Controller {
     			}
     		}
     	}
-//    	Vector<Section> selectDay = new Vector<Section>();
-//    	Vector<Section> selectDayForCourses = new Vector<Section>();
-//    	for (Course c:course)
-//    	{
-//    		for (int i = 0; i < c.getNumSections(); i++) {
-//				selectDayForCourses.add(c.getSection(i));
-//			}
-//    		
-//    	}
-//    	System.out.println("hhssh2--\\|/" + selectDayForCourses.size());
-//    	for (Course c: course) {
-////    		System.out.println(c.getTitle());
-//    		
-//    		for (int i = 0; i < Slot.DAYS.length; i++) {
-//    			if (filterCheckBox.get(filterCheckBoxName[i])) {
-////    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
-//    				
-//     				selectDayForCourses.retainAll(c.getSectionsThatHaveSlotOnDay(i));
-//     				System.out.println("hhssh2--\\|/" +i+ "a"+selectDay.size());
-//    			}
-//    			else System.out.println("ass"+i);
-//    		}
-//    		selectDay.addAll(selectDayForCourses);
-//    	}
-//    	
-//    	System.out.println("hhssh2--\\|/" + selectDay.size());
-//    	for (Section sec: selectDay) {
-//    		System.out.println(sec.getid());
-//    	}
-//    	System.out.println("hhssh2--/|\\" + selectDay.size());
+
     	Vector<Section> selectCCC = new Vector<Section>();
     	if (filterCheckBox.get("#filterCCC")) {
     		for (Course c: course) {
@@ -420,7 +387,13 @@ public class Controller {
     
     
     @FXML
-    
+    /**
+     * This function is used to support the selectAll button and when click the button all the features will be selected
+     * 
+     * @return no return value
+     * @author Ziyue
+     *
+     */
     void selectAll() {
     	AnchorPane ap = (AnchorPane)tabFilter.getContent();
     	ObservableList<Node> nodes = ap.getChildren();
@@ -640,7 +613,13 @@ public class Controller {
     		
     	}
     }
-
+    /**
+     * This function is used to scrape and calculate the value of certain instructor's average sfq
+     * 
+     * @return no return value
+     * @author Ziyue
+     *
+     */
     @FXML
     void findInstructorSfq() {
 		WebClient client = new WebClient();
@@ -719,6 +698,13 @@ public class Controller {
     }
 
     @FXML
+    /**
+     * This function is used to scrape and calculate the value of sfq for enrolled courses
+     * 
+     * @return no return value
+     * @author Ziyue
+     *
+     */
     void findSfqEnrollCourse() {
     	WebClient client = new WebClient();
 		client.getOptions().setCssEnabled(false);
