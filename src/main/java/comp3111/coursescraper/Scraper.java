@@ -125,7 +125,12 @@ public class Scraper {
 //		}
 //		return true;
 //	}
-	
+	/**
+	 * Check if an input section code 's' is valid or not
+	 * @author Jeff
+	 * @param s input section code
+	 * @return valid or not
+	 */
 	private boolean checkSectionCodeValid(String s) {
 		Character[] valid1 = {'A','0','1','2','3','4','5','6','7','8','9'};
 		Character[] valid2 = {'0','1','2','3','4','5','6','7','8','9'};
@@ -140,7 +145,12 @@ public class Scraper {
 		}
 		return true;
 	}
-	
+	/**
+	 * Check if an input url 'url' is valid or not
+	 * @author Jeff
+	 * @param url input url
+	 * @return valid or not
+	 */
 	private static boolean isValidUrl(String url) { 
         /* Try creating a valid URL */
         try { 
@@ -150,7 +160,12 @@ public class Scraper {
             return false; 
         }
     }
-	
+	/**
+	 * Check if an input term 'term' is valid or not
+	 * @author Jeff
+	 * @param term input term
+	 * @return valid or not
+	 */
 	private static boolean isValidTerm(String term) {
 		Character[] thirdPosition = {'1', '2', '3', '4'};
 		if (term.length() != 4) return false;
@@ -158,13 +173,23 @@ public class Scraper {
 		if (term.charAt(3) != '0') return false;
 		return true;
 	}
-	
+	/**
+	 * Check if an input subject 'subject' is valid or not
+	 * @author Jeff
+	 * @param subject input subject
+	 * @return valid or not
+	 */
 	private static boolean isValidSubject(String subject) {
 		if (subject.length() != 4) return false;
 		if (!subject.matches("[A-Z]*")) return false;
 		return true;
 	}
-	
+	/**
+	 * Check if accessing an input url 'url' will receive 404
+	 * @author Jeff
+	 * @param url input url
+	 * @return 404 no or yes
+	 */
 	private static boolean isPageFound(String url) {
 		try {
 			URL urlStr = new URL(url);
@@ -180,7 +205,12 @@ public class Scraper {
 		}
 		return true;
 	}
-	
+	/**
+	 * Check if a string is valid for Tutorial or Lab.
+	 * @author Jeff
+	 * @param s input string
+	 * @return valid or not
+	 */
 	private boolean hasTorLA(String s) {
 		if (s.charAt(0) == 'T') return true;
 		if (s.charAt(0) == 'L' && s.charAt(1) == 'A') return true;
@@ -229,7 +259,19 @@ public class Scraper {
 		return null;
 
 	}
-
+	/**
+	 * core function for scraping the web
+	 * @author Jeff
+	 * @param baseurl input base url
+	 * @param term input term
+	 * @param sub input subject
+	 * @return courses and instructors
+	 * @throws PageNotFoundError the error is thrown when accessing baseurl/term/subject returns 404
+	 * @throws UrlNotValidError the error is thrown when the baseurl is invalid
+	 * @throws TermNotValidError the error is thrown when the term is invalid
+	 * @throws SubjectNotValidError the error is thrown when the subject is invalid
+	 * @throws UnknownHostException the error is thrown when the baseurl is an unknown host
+	 */
 	public Vector<AbstractCollection> scrape(String baseurl, String term, String sub) throws PageNotFoundError, UrlNotValidError, TermNotValidError, SubjectNotValidError, UnknownHostException {
 		try {
 			if (!isValidUrl(baseurl)) throw new UrlNotValidError(baseurl);
