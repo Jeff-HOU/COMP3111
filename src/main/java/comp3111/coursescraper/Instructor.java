@@ -75,8 +75,8 @@ public class Instructor {
      * 
      *
      * @author Ziyue
-     * @param sfq the value of sfq
-     *
+     * @param the sfq value to be set
+
      */
 	public void setSfq(double sfq) {
 		this.sfq = sfq;

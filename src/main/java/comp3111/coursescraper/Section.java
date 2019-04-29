@@ -42,7 +42,7 @@ public class Section {
 	}
 	 /**
      * set the sfq value for the course
-     * 
+     * @param the sfq value to be set
      * @author Ziyue
      * @param sfq the value of sfq
      *
