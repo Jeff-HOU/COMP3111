@@ -58,7 +58,7 @@ public class Course {
 	private String courseCode;
     /**
      * set the course code for the course
-     * 
+     * @param The string to set
      * 
      * @author Ziyue
      *
@@ -72,7 +72,7 @@ public class Course {
     /**
      * set the sfq for the course
      * 
-     * 
+     * @param sfq: the sfq value to set
      * @author Ziyue
      *
      */
@@ -155,7 +155,7 @@ public class Course {
 
 	/** get the title of the course
 	 * @return the title
-	 * @Jeff, Ziyue
+	 * @author Jeff, Ziyue
 	 */
 	public String getTitle() {
 		return title;
