@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 
 /**
  * Section class to store sections of a course.
- * @author Jeff, Ziyue
+ * @author Jeff, Ziyue, zxiaac
  *
  */
 public class Section {
@@ -44,6 +44,7 @@ public class Section {
      * set the sfq value for the course
      * @param the sfq value to be set
      * @author Ziyue
+     * @param sfq the value of sfq
      *
      */
 	public void setSecSfq(double sfq) {
@@ -51,7 +52,7 @@ public class Section {
 	}
 	/**
 	 * overrides Object.clone() function
-	 * @author Jeff
+	 * @author Jeff, zxiaac
 	 * @return a clone of itself
 	 */
 	@Override
@@ -106,6 +107,10 @@ public class Section {
 			return slots.get(i);
 		return null;
 	}
+	/**
+	 * @author zxiaac
+	 * @return the section color, which is randomly assigned when the section is created
+	 */
 	public Color getColor() {
 		return c;
 	}
