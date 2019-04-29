@@ -791,11 +791,10 @@ public class Controller {
 //			System.out.println("ssss~~~~outsidefor");
 			Vector<Course> courses=new Vector<Course>();
 			for(Section section: sectionlist) {
-//				System.out.println("～～insidefor");
 				int flag=0;
 				for(Course c:courses) 
 				{		
-//					System.out.println("～～inside2for");
+
 					if (section.getCourseCode().equals(c.getCourseCode()))
 					{
 						double averageSfq=(c.getSfq()*c.getNumSections()+section.getSecSfq())/(c.getNumSections()+1);
@@ -805,7 +804,7 @@ public class Controller {
 						break;
 					}
 				}	
-//				System.out.println("～～finish2for");
+
 				if(flag==0)
 				{
 					Course newcourse=new Course();
@@ -815,7 +814,7 @@ public class Controller {
 					courses.add(newcourse);
 				}
 			}
-//			System.out.println("～～finishthefirstfor");
+
 
 
 
@@ -889,7 +888,7 @@ public class Controller {
     		searchInfo += "Total Number of Course in this search: " + course.size() + "\n";
     		searchInfo += "Instructors who has teaching assignment this term but does not need to teach at Tu 3:10pm:\n";
     		for (Instructor inst: ins_tu310) {
-    			searchInfo += inst + "\n"; // è¯´å¥½çš„ä¸�ä¼šé‡�å¤�å‘¢ï¼Ÿï¼Ÿï¼Ÿ
+    			searchInfo += inst + "\n"; 
     		}
     		textAreaConsole.appendText(searchInfo);
     		
