@@ -61,7 +61,7 @@ public class Course {
      * 
      * 
      * @author Ziyue
-     *
+     * @param s the course code
      */
 
   	public void setCourseCode(String s)
@@ -74,6 +74,7 @@ public class Course {
      * 
      * 
      * @author Ziyue
+     * @param sfq the value of sfq
      *
      */
   	public void setSfq(Double sfq)
@@ -155,7 +156,7 @@ public class Course {
 
 	/** get the title of the course
 	 * @return the title
-	 * @Jeff, Ziyue
+	 * @author Jeff, Ziyue
 	 */
 	public String getTitle() {
 		return title;

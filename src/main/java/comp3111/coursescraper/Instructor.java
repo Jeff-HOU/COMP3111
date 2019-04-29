@@ -75,6 +75,7 @@ public class Instructor {
      * 
      *
      * @author Ziyue
+     * @param sfq the value of sfq
      *
      */
 	public void setSfq(double sfq) {

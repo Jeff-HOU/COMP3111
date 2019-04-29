@@ -81,12 +81,21 @@ import java.net.UnknownHostException;
 
 /**
  * Main UI and function controller.
- * @author Jeff
+ * @author Jeff, zxiaac
  *
  */
 public class Controller {
+	/**
+     * if the tabAllSubjectSearch is clicked for the first time
+     */
 	private boolean first=true;
+	/**
+     * the progress of scrape in tab allsubjectsearch
+     */
 	private double progress = 0;
+	/**
+     * the number of all courses
+     */
 	private int totalcourse = 0;
     @FXML
     private Tab tabMain;
@@ -138,7 +147,9 @@ public class Controller {
     
     private Scraper scraper = new Scraper();
     
-
+    /**
+     * all the courses
+     */
     private Vector<Course> course = new Vector<Course>();
     private HashMap<String, Boolean> filterCheckBox = new HashMap<String, Boolean>();
     private static String[] filterCheckBoxName = {
@@ -147,6 +158,9 @@ public class Controller {
     		"#filterCCC", "#filterNOEx", "#filterTLA"
     };
     private Vector<Section> selectedSection = new Vector<Section>();
+    /**
+     * all the sections
+     */
     private Vector<Section> allsections = new Vector<Section>();
     /**
      * enrolled sections
@@ -412,17 +426,25 @@ public class Controller {
     	selectCourse();
     }
 
-    void updateprogress() {
-    	progressbar.setProgress(progress);
-    }
     
+    /**
+     * multi-thread Class inherited thread class to update progress bar.
+     * @author zxiaac
+     *
+     */
     class BarThread extends Thread {
     	  ProgressBar progressBar;
-
+    	  /**
+    	   * @param the progress bar to be updated
+    	   * @author zxiaac
+    	   */
     	  public BarThread(ProgressBar bar) {
     	    progressBar = bar;
     	  }
-
+    	  /**
+    	   * a function to scrape all the subjects and update the progress bar
+    	   * @author zxiaac
+    	   */
     	  public void run() {
 
     	      try {
@@ -472,7 +494,7 @@ public class Controller {
       		    	} catch (Exception e) {
       		    		if (e instanceof PageNotFoundError) {
       		    			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
-      		    			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
+      		    			AnchorPane ap = (AnchorPane)tabAllSubject.getContent();
       		        		Label msg = new Label("404 NOT FOUND");
       		        		ap.getChildren().add(msg);
       		    		} else if (e instanceof UrlNotValidError) {
@@ -496,7 +518,7 @@ public class Controller {
     	      } catch (Exception e) {
 		    		if (e instanceof PageNotFoundError) {
 		    			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
-		    			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
+		    			AnchorPane ap = (AnchorPane)tabAllSubject.getContent();
 		        		Label msg = new Label("404 NOT FOUND");
 		        		ap.getChildren().add(msg);
 		    		} else if (e instanceof UrlNotValidError) {
@@ -513,7 +535,10 @@ public class Controller {
     	    
     	  }
     }
-      
+    /**
+     * @author zxiaac
+     * function handling searching all subject courses and update the progress bar.
+     */  
     @FXML
     void allSubjectSearch()  {
     	buttonSfqEnrollCourse.setDisable(false);
@@ -819,7 +844,7 @@ public class Controller {
     }
     
     /**
-     * @author Jeff
+     * @author Jeff, zxiaac
      * function handling searching single subject courses.
      */
     @FXML
@@ -906,6 +931,10 @@ public class Controller {
     	
     	
     }
+    /**
+     * @author zxiaac
+     * update the timetable whenever the enrolledSection has changed
+     */
     void showTable() {
     	for(Section sec: allsections) {
     		AnchorPane ap = (AnchorPane)tabTimetable.getContent();

@@ -131,8 +131,6 @@ public class FxTest extends ApplicationTest {
 		
 		clickOn("#tabList");
 		
-		
-		
 		clickOn("#tabTimetable");
 		
 	}
