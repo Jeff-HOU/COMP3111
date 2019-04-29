@@ -31,29 +31,74 @@ public class Course {
 	 * Does this course have any exclusions?
 	 */
 	private boolean noexclusion; // No exclusion
-  
-	private ArrayList<Section> sections;
+    /**
+     * a list of sections that belongs to the course
+     * 
+     * 
+     * @author Ziyue
+     *
+     */
 	
+	private ArrayList<Section> sections;
+    /**
+     * the sfq for the course
+     * 
+     * 
+     * @author Ziyue
+     *
+     */
 	private double sfq;
+    /**
+     * a list of sections that belongs to the course
+     * 
+     * 
+     * @author Ziyue
+     *
+     */
 	private String courseCode;
-
+    /**
+     * set the course code for the course
+     * 
+     * 
+     * @author Ziyue
+     *
+     */
 
   	public void setCourseCode(String s)
 	{
 		this.courseCode=s;
 
   	}
-
+    /**
+     * set the sfq for the course
+     * 
+     * 
+     * @author Ziyue
+     *
+     */
   	public void setSfq(Double sfq)
 	{
 		this.sfq=sfq;
 
   	}
-
+    /**
+     * get the course code for the course
+     * 
+     * @return string type course code
+     * @author Ziyue
+     *
+     */
 
   	public String getCourseCode() {
 		return courseCode;
 	}
+    /**
+     * get the sfq value for the course
+     * 
+     * @return value of course sfq (double type)
+     * @author Ziyue
+     *
+     */
 	public double getSfq() {
 		return sfq;
 	}
@@ -71,14 +116,22 @@ public class Course {
 
 
 	}
+	 /**
+     * this function is to know whether the course has a certain section
+     * 
+     * @return true for has the section, false for don't have (boolean type)
+     * @param s Section to be checked whether is in the course
+     * @author Ziyue
+     *
+     */
 	public boolean hasSection(Section s)
 	{
-	for(Section sec:sections)
-	{
-	if (sec.getcode()==s.getcode()&&sec.getCourseCode()==s.getCourseCode())
-	{
-	return true;
-	}
+		for(Section sec:sections)
+		{
+		if (sec.getcode()==s.getcode()&&sec.getCourseCode()==s.getCourseCode())
+		{
+		return true;
+		}
 	}
 	return false;
 	}
@@ -100,51 +153,59 @@ public class Course {
 		return null;
 	}
 
-	/**
+	/** get the title of the course
 	 * @return the title
+	 * @Jeff, Ziyue
 	 */
 	public String getTitle() {
 		return title;
 	}
 
-	/**
-	 * @param title the title to set
+	/** set the title of the course
+	 * 
+	 * @param title: the title to set
+	 * @author Jeff, Ziyue
 	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 	
-	/**
+	/** get the description for the course
+	 * @author Jeff, Ziyue
 	 * @return the description
 	 */
 	public String getDescription() {
 		return description;
 	}
 
-	/**
+	/** set the description for the course
+	 * @author Jeff, Ziyue
 	 * @param description the description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	/**
+	/** get exclusion for the course
 	 * @return the exclusion
+	 * @author Jeff, Ziyue
 	 */
 	public String getExclusion() {
 		return exclusion;
 	}
 
-	/**
+	/** set the exclusive course for the course
 	 * @param exclusion the exclusion to set
+	 * @author Jeff, Ziyue
 	 */
 	public void setExclusion(String exclusion) {
 		this.exclusion = exclusion;
 		if (exclusion.equals("null")) noexclusion = true;
 	}
 	
-	/**
+	/** get the total number of Sections for the course
 	 * @return the NumSections
+	 * @author Jeff. Ziyue
 	 */
 	public int getNumSections() {
 		return sections.size();
@@ -243,7 +304,13 @@ public class Course {
 		}
 		return selected;
 	}
-
+	   /**
+     * get all the sections for the course
+     * 
+     * @return a vector of all the sections for the course
+     * @author Ziyue
+     *
+     */
 	public Vector<Section> getAllSections(){ // wait ta's response???
 		Vector<Section> selected = new Vector<Section>();
 		for (Section sec: sections) {

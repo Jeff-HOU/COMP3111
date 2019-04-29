@@ -97,7 +97,15 @@ public class Scraper {
 		client.getOptions().setCssEnabled(false);
 		client.getOptions().setJavaScriptEnabled(false);
 	}
-
+	 /**
+     * add a slot to a section
+     * 
+     * 
+     * @author Ziyue
+     *
+     */
+	
+	
 	private void addSlot(HtmlElement e, Section sec, boolean secondRow) {
 		String times[] =  e.getChildNodes().get(secondRow ? 0 : 3).asText().split(" ");
 		String venue = e.getChildNodes().get(secondRow ? 1 : 4).asText();
