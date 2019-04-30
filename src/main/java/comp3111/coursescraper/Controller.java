@@ -231,10 +231,11 @@ public class Controller {
     			if (filterCheckBox.get(filterCheckBoxName[i])) {
     				count++;
     				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
-
-    				if (count==1) selectDayForCourse.addAll(c.getSectionsThatHaveSlotOnDay(i));
-
-    				else selectDayForCourse.retainAll(c.getSectionsThatHaveSlotOnDay(i));
+    				if (c.getSectionsThatHaveSlotOnDay(i).isEmpty()) {
+    					selectDayForCourse.clear();
+    					break;
+    				}
+    				selectDayForCourse.addAll(c.getSectionsThatHaveSlotOnDay(i));
     			}
     		}
     		Day.addAll(selectDayForCourse);
