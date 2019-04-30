@@ -555,6 +555,8 @@ public class Controller {
     		}
     		else {
     			first = true;
+    			Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
+    			textAreaConsole.setText("Total Number of Categories/Code Prefix: "+subjects.size());
     			/*
     			int totalcourse = 0;
     			Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
