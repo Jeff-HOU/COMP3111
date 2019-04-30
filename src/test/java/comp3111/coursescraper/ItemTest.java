@@ -387,9 +387,10 @@ public class ItemTest {
 		c.setCourseCode("COMP1001");
 		c.addSection(sec); c.addSection(sec2);c.addSection(sec3);
 		//c.getSectionsThatHaveAMSlots();
+		c.getSectionsThatHaveAMandPMSlots();
 		assertTrue(c.getSectionsThatHaveAMSlots().size()==2);
 		assertTrue(c.getSectionsThatHavePMSlots().size()==3);
-		c.getSectionsThatHaveAMandPMSlots();
+		
 	}
 	
 	

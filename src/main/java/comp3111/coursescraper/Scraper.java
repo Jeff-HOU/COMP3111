@@ -97,7 +97,15 @@ public class Scraper {
 		client.getOptions().setCssEnabled(false);
 		client.getOptions().setJavaScriptEnabled(false);
 	}
-
+	 /**
+     * add a slot to a section
+     * 
+     * 
+     * @author Ziyue
+     *
+     */
+	
+	
 	private void addSlot(HtmlElement e, Section sec, boolean secondRow) {
 		String times[] =  e.getChildNodes().get(secondRow ? 0 : 3).asText().split(" ");
 		String venue = e.getChildNodes().get(secondRow ? 1 : 4).asText();
@@ -217,7 +225,17 @@ public class Scraper {
 		if (s.charAt(0) == 'L' && s.charAt(1) == 'A') return true;
 		return false;
 	}
-
+	/**
+	 * scrape all the subjects
+	 * @author zxiaac
+	 * @param baseurl input base url
+	 * @param term input term
+	 * @return a vector of all subjects like ACCT in type string
+	 * @throws PageNotFoundError the error is thrown when accessing baseurl/term/ returns 404
+	 * @throws UrlNotValidError the error is thrown when the baseurl is invalid
+	 * @throws TermNotValidError the error is thrown when the term is invalid
+	 * @throws UnknownHostException the error is thrown when the baseurl is an unknown host
+	 */
 	public Vector<String> scrapeSubject(String baseurl, String term) throws PageNotFoundError, UrlNotValidError, TermNotValidError, UnknownHostException {
 		try {
 			//System.out.println("enter");

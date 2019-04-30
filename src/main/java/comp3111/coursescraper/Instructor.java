@@ -49,8 +49,10 @@ public class Instructor {
 		if (name.equals(((Instructor)i).name)) return true;
 		return false;
 	}
-	/**
+	/**get the name of the instructor
 	 * @return abstract class information to string
+	 * 
+	 * @author Jeff, Ziyue
 	 */
 	public String toString() {
 		return name;
@@ -69,12 +71,34 @@ public class Instructor {
 	public String getName() {
 		return name;
 	}
+	 /**
+     * set the sfq value for the instructor
+     * 
+     *
+     * @author Ziyue
+     * @param sfq the sfq value to be set
+
+     */
 	public void setSfq(double sfq) {
 		this.sfq = sfq;
 	}
+	 /**
+     * get the sfq value for the instructor
+     * 
+     * @return value of course sfq (double type)
+     * @author Ziyue
+     *
+     */
 	public double getSfq() {
 		return sfq;
 	}
+	 /**
+     * get the number of sections does the instructor teach
+     * 
+     * @return number of how many section does the instructor teach (int type)
+     * @author Ziyue
+     *
+     */
 	public int getNumSection() {
 		return numSection;
 	}

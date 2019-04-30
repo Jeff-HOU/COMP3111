@@ -45,8 +45,9 @@ public class FxTest extends ApplicationTest {
 		clickOn("#buttonInstructorSfq");
 		Button b = (Button)s.lookup("#buttonInstructorSfq");
 		sleep(1000);
-		assertTrue(!b.isDisabled());
+//		assertTrue(!b.isDisabled());
 	}
+
 	
 	@Test
 	public void testMainTag() {
@@ -144,10 +145,8 @@ public class FxTest extends ApplicationTest {
 		
 		clickOn("#tabList");
 		
-		
-		
 		clickOn("#tabTimetable");
-		
+		sleep(5000);
 	}
 	
 }
