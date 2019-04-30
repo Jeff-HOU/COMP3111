@@ -44,8 +44,9 @@ public class Instructor {
 	 * @param i compare the current Instructor to another to check if they equals or not
 	 * @return equal or not based on their names
 	 */
-	public boolean equals(Instructor i) {
-		if (name == i.name) return true;
+	@Override
+	public boolean equals(Object i) {
+		if (name.equals(((Instructor)i).name)) return true;
 		return false;
 	}
 	/**get the name of the instructor
