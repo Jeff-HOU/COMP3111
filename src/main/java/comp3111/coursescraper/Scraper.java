@@ -144,13 +144,14 @@ public class Scraper {
 		Character[] valid2 = {'0','1','2','3','4','5','6','7','8','9'};
 		if (s.isEmpty()) return false;
 		if (s.charAt(0) != 'T' && s.charAt(0) != 'L') return false;
-		if (s.charAt(0) == 'L' && (!Arrays.asList(valid1).contains(s.charAt(1)))) return false;
-		if (s.charAt(0) == 'L') {
-			int i = (s.charAt(1) == 'A') ? 2 : 1;
-			for (; i < s.length() - 1; i++) {
-				if (!Arrays.asList(valid2).contains(s.charAt(i))) return false;
-			}
-		}
+//		if (s.charAt(0) == 'L' && (!Arrays.asList(valid1).contains(s.charAt(1)))) return false;
+//		if (s.charAt(0) == 'L') {
+//			int i = (s.charAt(1) == 'A') ? 2 : 1;
+//			for (; i < s.length() - 1; i++) {
+//				if (!Arrays.asList(valid2).contains(s.charAt(i))) return false;
+//			}
+//		}
+		if (s.charAt(0) == 'L') return true;
 		return true;
 	}
 	/**
