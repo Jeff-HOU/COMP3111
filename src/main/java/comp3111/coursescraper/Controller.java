@@ -189,7 +189,17 @@ public class Controller {
     	Vector<Section> AMPM = new Vector<Section>();
     	if (filterCheckBox.get("#filterAM") && filterCheckBox.get("#filterPM")) {
     		for (Course c: course) {
-    			AMPM.addAll(c.getSectionsThatHaveAMandPMSlots());
+				if (c.getSectionsThatHaveAMSlots().isEmpty()) {
+					
+					continue;
+				}
+    			
+				if (c.getSectionsThatHavePMSlots().isEmpty()) {
+					
+					continue;
+				}    			
+    			AMPM.addAll(c.getSectionsThatHavePMSlots());
+    			    			
     		}
     	} else if (filterCheckBox.get("#filterAM") && !(filterCheckBox.get("#filterPM"))) {
     		for (Course c: course) {
@@ -230,11 +240,12 @@ public class Controller {
     		for (int i = 0; i < Slot.DAYS.length; i++) {
     			if (filterCheckBox.get(filterCheckBoxName[i])) {
     				count++;
-    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
-
-    				if (count==1) selectDayForCourse.addAll(c.getSectionsThatHaveSlotOnDay(i));
-
-    				else selectDayForCourse.retainAll(c.getSectionsThatHaveSlotOnDay(i));
+//    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
+    				if (c.getSectionsThatHaveSlotOnDay(i).isEmpty()) {
+    					selectDayForCourse.clear();
+    					break;
+    				}
+    				selectDayForCourse.addAll(c.getSectionsThatHaveSlotOnDay(i));
     			}
     		}
     		Day.addAll(selectDayForCourse);
@@ -449,20 +460,22 @@ public class Controller {
 
     	      try {
     	    	  totalcourse = 0;
+    	    	  Vector<Course> scapecourse = new Vector<Course>();
       			  Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
     	    	  for(String a: subjects) {
       				try {
       		    		//textAreaConsole.setText("");
       		    		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),a);
       		    		totalcourse+=vec.get(0).size();
-      		    		course.clear();
+      		    		scapecourse.clear();
       		    		course.addAll((Vector<Course>) vec.get(0));
+      		    		scapecourse.addAll((Vector<Course>) vec.get(0));
 
       		    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
       		    		int allNumSections = 0;
       		    		LocalTime TU310 = LocalTime.parse("03:10PM", DateTimeFormatter.ofPattern("hh:mma", Locale.US));
       		    		HashSet<Instructor> ins_tu310 = (HashSet<Instructor>)ins.clone(); //???
-      		    		for (Course c : course) {
+      		    		for (Course c : scapecourse) {
       		    			allNumSections += c.getNumSections();
       		        		String newline = c.getTitle() + "\n";
       		        		for (int i = 0; i < c.getNumSections(); i++) {
@@ -567,7 +580,6 @@ public class Controller {
     		    		totalcourse+=vec.get(0).size();
     		    		course.clear();
     		    		course.addAll((Vector<Course>) vec.get(0));
-
     		    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
     		    		int allNumSections = 0;
     		    		LocalTime TU310 = LocalTime.parse("03:10PM", DateTimeFormatter.ofPattern("hh:mma", Locale.US));
@@ -856,7 +868,12 @@ public class Controller {
     		
     		Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
     		textAreaConsole.setText("Total Number of Categories/Code Prefix: "+subjects.size());
-    		if(first) first = false;
+    		if(first) {
+    			progress = 0;
+    			progressbar.setProgress(progress);
+    			first = false;
+    		}
+    		
 			
     		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),textfieldSubject.getText());
 
@@ -866,7 +883,13 @@ public class Controller {
     		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
     		int allNumSections = 0;
     		LocalTime TU310 = LocalTime.parse("03:10PM", DateTimeFormatter.ofPattern("hh:mma", Locale.US));
-    		HashSet<Instructor> ins_tu310 = (HashSet<Instructor>)ins.clone(); //???
+    		ArrayList<String> ins_out = new ArrayList<String>();
+        	for (Instructor inst: ins) {
+        		String ins_name = inst.getName();
+        		if((!ins_out.contains(ins_name)) && (!ins_name.equals("TBA"))) {
+        			ins_out.add(ins_name);
+        		}
+        	}
     		for (Course c : course) {
     			allNumSections += c.getNumSections();
         		String newline = c.getTitle() + "\n";
@@ -878,39 +901,23 @@ public class Controller {
         				Slot s = sec.getSlot(j);
         				if (s.getDay() == 1 && s.getStart().compareTo(TU310) <= 0 && s.getEnd().compareTo(TU310) >= 0) {
         					for (Instructor inst: sec.getInstructors())
-        						ins_tu310.remove(inst);
+        						ins_out.remove(inst.getName());
         				}
         			}
         		}
         		textAreaConsole.setText(textAreaConsole.getText() + "\n" + newline); // remove this and change the appendText below to setText???
         	}
-        	
+        	Collections.sort(ins_out);
     		String searchInfo = "";
     		searchInfo += "Total Number of difference sections in this search: " + allNumSections + "\n";
     		searchInfo += "Total Number of Course in this search: " + course.size() + "\n";
     		searchInfo += "Instructors who has teaching assignment this term but does not need to teach at Tu 3:10pm:\n";
-    		for (Instructor inst: ins_tu310) {
-    			searchInfo += inst + "\n"; 
+    		for (String name: ins_out) {
+    			searchInfo += name + ",\n";
     		}
     		textAreaConsole.appendText(searchInfo);
-    		
-        	//Add a random block on Saturday
-        	//AnchorPane ap = (AnchorPane)tabTimetable.getContent();
-        	///Label randomLabel = new Label("COMP1022\nL1");
-        	//Random r = new Random();
-        	//double start = (r.nextInt(10) + 1) * 20 + 40;
-
-        	//randomLabel.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-        	//randomLabel.setLayoutX(600.0);
-        	//randomLabel.setLayoutY(start);
-        	//randomLabel.setMinWidth(100.0);
-        	//randomLabel.setMaxWidth(100.0);
-        	//randomLabel.setMinHeight(60);
-        	//randomLabel.setMaxHeight(60);
-        
-        	//ap.getChildren().addAll(randomLabel);
-        	AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
-        	ap_tabstat.getChildren().clear();
+    		AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
+			  ap_tabstat.getChildren().clear();
     	} catch (Exception e) {
     		if (e instanceof PageNotFoundError) {
     			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
@@ -926,11 +933,7 @@ public class Controller {
     		} else if (e instanceof UnknownHostException) {
     			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
     		}
-    		
     	}
-    	
-    	
-    	
     }
     /**
      * @author zxiaac
@@ -943,7 +946,7 @@ public class Controller {
     			ap.getChildren().remove(sec.getSlot(i).la);
     		}
     	}
-    	for(Section sec: selectedSection) {
+    	for(Section sec: allsections) {
     	//for(Section sec: allsections) {
     		for(SectionsToList stl: enrolledSection) {
     			AnchorPane ap = (AnchorPane)tabTimetable.getContent();
