@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
@@ -60,6 +61,18 @@ public class FxTest extends ApplicationTest {
 		sleep(5000);
 		TextArea ta = (TextArea)s.lookup("#textAreaConsole");
 		assertTrue(!ta.getText().trim().isEmpty());
+	}
+	
+	@Test
+	public void testListTag() {
+		clickOn("#tabMain");
+		clickOn("#buttonSearch");
+		sleep(5000);
+//		clickOn("#tabFilter");
+//		CheckBox checkboxWED = (CheckBox) s.lookup("filterWED");
+//		checkboxWED.setSelected(true);
+//		sleep(1000);
+		clickOn("#tabList");
 	}
 	
 	@Test
