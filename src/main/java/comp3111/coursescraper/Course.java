@@ -74,7 +74,6 @@ public class Course {
      * 
      * @param sfq: the sfq value to set
      * @author Ziyue
-     * @param sfq the value of sfq
      *
      */
   	public void setSfq(Double sfq)
