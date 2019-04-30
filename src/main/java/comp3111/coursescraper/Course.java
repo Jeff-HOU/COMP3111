@@ -58,7 +58,6 @@ public class Course {
 	private String courseCode;
     /**
      * set the course code for the course
-     * @param The string to set
      * 
      * @author Ziyue
      * @param s the course code
