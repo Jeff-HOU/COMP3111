@@ -189,7 +189,17 @@ public class Controller {
     	Vector<Section> AMPM = new Vector<Section>();
     	if (filterCheckBox.get("#filterAM") && filterCheckBox.get("#filterPM")) {
     		for (Course c: course) {
-    			AMPM.addAll(c.getSectionsThatHaveAMandPMSlots());
+				if (c.getSectionsThatHaveAMSlots().isEmpty()) {
+					
+					continue;
+				}
+    			
+				if (c.getSectionsThatHavePMSlots().isEmpty()) {
+					
+					continue;
+				}    			
+    			AMPM.addAll(c.getSectionsThatHavePMSlots());
+    			    			
     		}
     	} else if (filterCheckBox.get("#filterAM") && !(filterCheckBox.get("#filterPM"))) {
     		for (Course c: course) {
@@ -230,7 +240,7 @@ public class Controller {
     		for (int i = 0; i < Slot.DAYS.length; i++) {
     			if (filterCheckBox.get(filterCheckBoxName[i])) {
     				count++;
-    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
+//    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
     				if (c.getSectionsThatHaveSlotOnDay(i).isEmpty()) {
     					selectDayForCourse.clear();
     					break;
