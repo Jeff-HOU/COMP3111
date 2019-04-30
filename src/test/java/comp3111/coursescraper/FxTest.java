@@ -133,7 +133,7 @@ public class FxTest extends ApplicationTest {
 		clickOn("#tabList");
 		
 		clickOn("#tabTimetable");
-		
+		sleep(5000);
 	}
 	
 }

@@ -852,9 +852,9 @@ public class Controller {
     	try {
     		textAreaConsole.setText("");
     		
-    		
     		Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
-			textAreaConsole.setText("Total Number of Categories/Code Prefix: "+subjects.size());
+    		textAreaConsole.setText("Total Number of Categories/Code Prefix: "+subjects.size());
+    		if(first) first = false;
 			
     		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),textfieldSubject.getText());
 
@@ -907,8 +907,8 @@ public class Controller {
         	//randomLabel.setMaxHeight(60);
         
         	//ap.getChildren().addAll(randomLabel);
-        	//AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
-        	//ap_tabstat.getChildren().clear();
+        	AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
+        	ap_tabstat.getChildren().clear();
     	} catch (Exception e) {
     		if (e instanceof PageNotFoundError) {
     			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
@@ -980,8 +980,7 @@ public class Controller {
     	        
     					sec.getSlot(i).la = randomLabel;
     					ap.getChildren().addAll(randomLabel);
-    					AnchorPane ap_tabstat = (AnchorPane)tabStatistic.getContent();
-    					ap_tabstat.getChildren().clear();
+    					
     				}
     			}
     		}
