@@ -16,6 +16,9 @@ import javafx.scene.layout.AnchorPane;
 
 import com.gargoylesoftware.htmlunit.html.DomText;
 import java.util.Vector;
+
+import javax.swing.SwingUtilities;
+
 import java.util.HashSet;
 import java.net.URLEncoder;
 import java.net.URL;
@@ -34,6 +37,7 @@ import javafx.scene.layout.AnchorPane;
 import com.gargoylesoftware.htmlunit.html.DomText;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -74,8 +78,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.net.UnknownHostException;
+
+/**
+ * Main UI and function controller.
+ * @author Jeff, zxiaac
+ *
+ */
 public class Controller {
+	/**
+     * if the tabAllSubjectSearch is clicked for the first time
+     */
 	private boolean first=true;
+	/**
+     * the progress of scrape in tab allsubjectsearch
+     */
+	private double progress = 0;
+	/**
+     * the number of all courses
+     */
+	private int totalcourse = 0;
     @FXML
     private Tab tabMain;
 
@@ -126,7 +147,9 @@ public class Controller {
     
     private Scraper scraper = new Scraper();
     
-
+    /**
+     * all the courses
+     */
     private Vector<Course> course = new Vector<Course>();
     private HashMap<String, Boolean> filterCheckBox = new HashMap<String, Boolean>();
     private static String[] filterCheckBoxName = {
@@ -135,16 +158,25 @@ public class Controller {
     		"#filterCCC", "#filterNOEx", "#filterTLA"
     };
     private Vector<Section> selectedSection = new Vector<Section>();
+    /**
+     * all the sections
+     */
     private Vector<Section> allsections = new Vector<Section>();
+    /**
+     * enrolled sections
+     */
     private Vector<SectionsToList> enrolledSection = new Vector<SectionsToList>();
     
     @FXML
+    /**
+     * This function is used to select certain attribute of a course 
+     * 
+     * @return no return value
+     * @author Ziyue
+     *
+     */
     void selectCourse() {
-//    	if (filterCheckBox.isEmpty()) {
-//    		for (String s: filterCheckBoxName) {
-//        		filterCheckBox.put(s, false);
-//        	}
-//    	}
+
     	for(Course c: course) {
     		for(int j=0;j<c.getNumSections();j++)
     			allsections.add(c.getSection(j));
@@ -192,23 +224,16 @@ public class Controller {
 
     	Vector<Section> Day = new Vector<Section>();
     	for (Course c: course) {
-//    		System.out.println(c.getTitle());
+
     		Vector<Section> selectDayForCourse = new Vector<Section>();
     		int count=0;
     		for (int i = 0; i < Slot.DAYS.length; i++) {
     			if (filterCheckBox.get(filterCheckBoxName[i])) {
     				count++;
     				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
-//    				if (c.getSectionsThatHaveSlotOnDay(i).isEmpty()) {
-//    					selectDayForCourse.clear();
-//    					break;
-//    				}
+
     				if (count==1) selectDayForCourse.addAll(c.getSectionsThatHaveSlotOnDay(i));
-//    				if (c.getSectionsThatHaveSlotOnDay(i).isEmpty())
-//    				{
-//    					selectDayForCourse.clear();
-//    					break;
-//    				}
+
     				else selectDayForCourse.retainAll(c.getSectionsThatHaveSlotOnDay(i));
     			}
     		}
@@ -226,36 +251,7 @@ public class Controller {
     			}
     		}
     	}
-//    	Vector<Section> selectDay = new Vector<Section>();
-//    	Vector<Section> selectDayForCourses = new Vector<Section>();
-//    	for (Course c:course)
-//    	{
-//    		for (int i = 0; i < c.getNumSections(); i++) {
-//				selectDayForCourses.add(c.getSection(i));
-//			}
-//    		
-//    	}
-//    	System.out.println("hhssh2--\\|/" + selectDayForCourses.size());
-//    	for (Course c: course) {
-////    		System.out.println(c.getTitle());
-//    		
-//    		for (int i = 0; i < Slot.DAYS.length; i++) {
-//    			if (filterCheckBox.get(filterCheckBoxName[i])) {
-////    				System.out.println(filterCheckBoxName[i] + " " + selectDayForCourse.isEmpty());
-//    				
-//     				selectDayForCourses.retainAll(c.getSectionsThatHaveSlotOnDay(i));
-//     				System.out.println("hhssh2--\\|/" +i+ "a"+selectDay.size());
-//    			}
-//    			else System.out.println("ass"+i);
-//    		}
-//    		selectDay.addAll(selectDayForCourses);
-//    	}
-//    	
-//    	System.out.println("hhssh2--\\|/" + selectDay.size());
-//    	for (Section sec: selectDay) {
-//    		System.out.println(sec.getid());
-//    	}
-//    	System.out.println("hhssh2--/|\\" + selectDay.size());
+
     	Vector<Section> selectCCC = new Vector<Section>();
     	if (filterCheckBox.get("#filterCCC")) {
     		for (Course c: course) {
@@ -311,7 +307,10 @@ public class Controller {
     	}
     	listCourse();
     }
-    
+    /**
+     * @author Jeff
+     * list selected sections on TableView
+     */
     void listCourse() { // a very important source: https://stackoverflow.com/questions/48590054/javafx-tableview-how-to-add-a-listener-to-checkbox-column
     	AnchorPane ap = (AnchorPane)tabList.getContent();
     	TableView tv = (TableView)ap.lookup("#listTableView");
@@ -402,7 +401,13 @@ public class Controller {
     
     
     @FXML
-    
+    /**
+     * This function is used to support the selectAll button and when click the button all the features will be selected
+     * 
+     * @return no return value
+     * @author Ziyue
+     *
+     */
     void selectAll() {
     	AnchorPane ap = (AnchorPane)tabFilter.getContent();
     	ObservableList<Node> nodes = ap.getChildren();
@@ -421,20 +426,136 @@ public class Controller {
     	selectCourse();
     }
 
-      
+    
+    /**
+     * multi-thread Class inherited thread class to update progress bar.
+     * @author zxiaac
+     *
+     */
+    class BarThread extends Thread {
+    	  ProgressBar progressBar;
+    	  /**
+    	   * @param the progress bar to be updated
+    	   * @author zxiaac
+    	   */
+    	  public BarThread(ProgressBar bar) {
+    	    progressBar = bar;
+    	  }
+    	  /**
+    	   * a function to scrape all the subjects and update the progress bar
+    	   * @author zxiaac
+    	   */
+    	  public void run() {
+
+    	      try {
+    	    	  totalcourse = 0;
+      			  Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
+    	    	  for(String a: subjects) {
+      				try {
+      		    		//textAreaConsole.setText("");
+      		    		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),a);
+      		    		totalcourse+=vec.get(0).size();
+      		    		course.clear();
+      		    		course.addAll((Vector<Course>) vec.get(0));
+
+      		    		HashSet<Instructor> ins = (HashSet<Instructor>) vec.get(1);
+      		    		int allNumSections = 0;
+      		    		LocalTime TU310 = LocalTime.parse("03:10PM", DateTimeFormatter.ofPattern("hh:mma", Locale.US));
+      		    		HashSet<Instructor> ins_tu310 = (HashSet<Instructor>)ins.clone(); //???
+      		    		for (Course c : course) {
+      		    			allNumSections += c.getNumSections();
+      		        		String newline = c.getTitle() + "\n";
+      		        		for (int i = 0; i < c.getNumSections(); i++) {
+      		        			Section sec = c.getSection(i);
+//      		        			newline += "Slot " + i + ": " + t + "\n";
+      		        			newline += sec;
+      		        			for (int j = 0; j < sec.getNumSlots(); j++) {
+      		        				Slot s = sec.getSlot(j);
+      		        				if (s.getDay() == 1 && s.getStart().compareTo(TU310) <= 0 && s.getEnd().compareTo(TU310) >= 0) {
+      		        					for (Instructor inst: sec.getInstructors())
+      		        						ins_tu310.remove(inst);
+      		        				}
+      		        			}
+      		        		}
+      		        		//textAreaConsole.setText(textAreaConsole.getText() + "\n" + newline); // remove this and change the appendText below to setText???
+      		        		javafx.application.Platform.runLater( () -> {
+      		        			//String newline = c.getTitle() + "\n";
+      		        			textAreaConsole.setText(textAreaConsole.getText() + "\n" + c.getTitle());
+          		        		for (int i = 0; i < c.getNumSections(); i++) {
+          		        			Section sec = c.getSection(i);
+//          		        			newline += "Slot " + i + ": " + t + "\n";
+          		        			textAreaConsole.setText(textAreaConsole.getText() + "\n" + sec);
+          		        			//newline += sec;
+          		        		}
+          		        		//textAreaConsole.setText(textAreaConsole.getText() + "\n" + newline);
+      		        		} );
+      		    		}
+      		        	
+      		    	} catch (Exception e) {
+      		    		if (e instanceof PageNotFoundError) {
+      		    			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
+      		    			AnchorPane ap = (AnchorPane)tabAllSubject.getContent();
+      		        		Label msg = new Label("404 NOT FOUND");
+      		        		ap.getChildren().add(msg);
+      		    		} else if (e instanceof UrlNotValidError) {
+      		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		} else if (e instanceof TermNotValidError) {
+      		    			textAreaConsole.setText("Term you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		} else if (e instanceof SubjectNotValidError) {
+      		    			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		} else if (e instanceof UnknownHostException) {
+      		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+      		    		}
+      		    		
+      		    	}
+      				System.out.println("SUBJECT is done");
+      				progress+=1/(double)subjects.size();	
+      				progressBar.setProgress(progress);
+      				Thread.sleep(500);
+      				
+    	    	  }
+    	    	  textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
+    	      } catch (Exception e) {
+		    		if (e instanceof PageNotFoundError) {
+		    			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
+		    			AnchorPane ap = (AnchorPane)tabAllSubject.getContent();
+		        		Label msg = new Label("404 NOT FOUND");
+		        		ap.getChildren().add(msg);
+		    		} else if (e instanceof UrlNotValidError) {
+		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		} else if (e instanceof TermNotValidError) {
+		    			textAreaConsole.setText("Term you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		} else if (e instanceof SubjectNotValidError) {
+		    			textAreaConsole.setText("Subject you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		} else if (e instanceof UnknownHostException) {
+		    			textAreaConsole.setText("URL you entered: \n\t" + e.getMessage() + "\nis invalid");
+		    		}
+		    		
+		    	}
+    	    
+    	  }
+    }
+    /**
+     * @author zxiaac
+     * function handling searching all subject courses and update the progress bar.
+     */  
     @FXML
     void allSubjectSearch()  {
     	buttonSfqEnrollCourse.setDisable(false);
+    	//textAreaConsole.setText("");
     	try {
     		if(first) {
+    			//System.out.println("first is true");
     			Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
-    			textAreaConsole.setText(subjects.toString());
+    			//textAreaConsole.setText(subjects.toString());
     			textAreaConsole.setText("Total Number of Categories/Code Prefix: "+subjects.size());
+    			progress = 0;
+    			progressbar.setProgress(progress);
     			first = false;
     		}
     		else {
     			first = true;
-    			double progress = 0;
+    			/*
     			int totalcourse = 0;
     			Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
     			for(String a: subjects) {
@@ -486,15 +607,23 @@ public class Controller {
     		    	}
     		    System.out.println("SUBJECT is done");
     		    progress+=1/(double)subjects.size();
-    		    progressbar.setProgress(progress);
+    		    //updateprogress();
+    		    //progressbar.setProgress(progress);
+    		     
+    		     */
+    			//System.out.println("SUBJECT is done");
+    		    
+    		    Thread stepper = new BarThread(progressbar);
+    	        stepper.start();
+    	        
+    	        //textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
     			}
-    			//textAreaConsole.setText("no way");
-    			textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
-    		}
+    			//textAreaConsole.setText(textAreaConsole.getText() + "\n" + "Total Number of Courses fetched: "+totalcourse);
+    		//}
     	}catch (Exception e) {
     		if (e instanceof PageNotFoundError) {
     			textAreaConsole.setText("Combination you entered: \n\t" + e.getMessage() + "\nis not found");
-    			AnchorPane ap = (AnchorPane)tabStatistic.getContent();
+    			AnchorPane ap = (AnchorPane)tabAllSubject.getContent();
         		Label msg = new Label("404 NOT FOUND");
         		ap.getChildren().add(msg);
     		} else if (e instanceof UrlNotValidError) {
@@ -509,7 +638,13 @@ public class Controller {
     		
     	}
     }
-
+    /**
+     * This function is used to scrape and calculate the value of certain instructor's average sfq
+     * 
+     * @return no return value
+     * @author Ziyue
+     *
+     */
     @FXML
     void findInstructorSfq() {
 		WebClient client = new WebClient();
@@ -588,6 +723,13 @@ public class Controller {
     }
 
     @FXML
+    /**
+     * This function is used to scrape and calculate the value of sfq for enrolled courses
+     * 
+     * @return no return value
+     * @author Ziyue
+     *
+     */
     void findSfqEnrollCourse() {
     	WebClient client = new WebClient();
 		client.getOptions().setCssEnabled(false);
@@ -649,11 +791,10 @@ public class Controller {
 //			System.out.println("ssss~~~~outsidefor");
 			Vector<Course> courses=new Vector<Course>();
 			for(Section section: sectionlist) {
-//				System.out.println("～～insidefor");
 				int flag=0;
 				for(Course c:courses) 
 				{		
-//					System.out.println("～～inside2for");
+
 					if (section.getCourseCode().equals(c.getCourseCode()))
 					{
 						double averageSfq=(c.getSfq()*c.getNumSections()+section.getSecSfq())/(c.getNumSections()+1);
@@ -663,7 +804,7 @@ public class Controller {
 						break;
 					}
 				}	
-//				System.out.println("～～finish2for");
+
 				if(flag==0)
 				{
 					Course newcourse=new Course();
@@ -673,7 +814,7 @@ public class Controller {
 					courses.add(newcourse);
 				}
 			}
-//			System.out.println("～～finishthefirstfor");
+
 
 
 
@@ -700,12 +841,21 @@ public class Controller {
 		}
 
     }
-
+    
+    /**
+     * @author Jeff, zxiaac
+     * function handling searching single subject courses.
+     */
     @FXML
     void search() {
     	buttonSfqEnrollCourse.setDisable(false);
     	try {
     		textAreaConsole.setText("");
+    		
+    		
+    		Vector<String> subjects = scraper.scrapeSubject(textfieldURL.getText(), textfieldTerm.getText());
+			textAreaConsole.setText("Total Number of Categories/Code Prefix: "+subjects.size());
+			
     		Vector<AbstractCollection> vec = scraper.scrape(textfieldURL.getText(), textfieldTerm.getText(),textfieldSubject.getText());
 
     		course.clear();
@@ -738,7 +888,7 @@ public class Controller {
     		searchInfo += "Total Number of Course in this search: " + course.size() + "\n";
     		searchInfo += "Instructors who has teaching assignment this term but does not need to teach at Tu 3:10pm:\n";
     		for (Instructor inst: ins_tu310) {
-    			searchInfo += inst + "\n"; // è¯´å¥½çš„ä¸�ä¼šé‡�å¤�å‘¢ï¼Ÿï¼Ÿï¼Ÿ
+    			searchInfo += inst + "\n"; 
     		}
     		textAreaConsole.appendText(searchInfo);
     		
@@ -780,6 +930,10 @@ public class Controller {
     	
     	
     }
+    /**
+     * @author zxiaac
+     * update the timetable whenever the enrolledSection has changed
+     */
     void showTable() {
     	for(Section sec: allsections) {
     		AnchorPane ap = (AnchorPane)tabTimetable.getContent();

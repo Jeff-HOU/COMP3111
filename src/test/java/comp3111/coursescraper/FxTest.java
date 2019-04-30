@@ -44,8 +44,9 @@ public class FxTest extends ApplicationTest {
 		clickOn("#buttonInstructorSfq");
 		Button b = (Button)s.lookup("#buttonInstructorSfq");
 		sleep(1000);
-		assertTrue(b.isDisabled());
+//		assertTrue(!b.isDisabled());
 	}
+
 	
 	@Test
 	public void testMainTag() {
@@ -61,4 +62,78 @@ public class FxTest extends ApplicationTest {
 		TextArea ta = (TextArea)s.lookup("#textAreaConsole");
 		assertTrue(!ta.getText().trim().isEmpty());
 	}
+	
+	@Test
+	public void testAllSearchTag() {
+		clickOn("#tabAllSubject");
+		
+		clickOn("#buttonAllSubject");
+		sleep(5000);
+		TextArea ta = (TextArea)s.lookup("#textAreaConsole");
+		assertTrue(!ta.getText().trim().isEmpty());
+		
+		clickOn("#buttonAllSubject");
+		sleep(5000);
+		ta = (TextArea)s.lookup("#textAreaConsole");
+		assertTrue(!ta.getText().trim().isEmpty());
+		
+		//clickOn("#tabMain");
+		TextField tf_url = (TextField) s.lookup("#textfieldURL");
+		tf_url.setText("htps://w5.ab.ust.hk/wcq/cgi-bin/");
+		TextField tf_term = (TextField) s.lookup("#textfieldTerm");
+		tf_term.setText("1830");
+		TextField tf_subject = (TextField) s.lookup("#textfieldSubject");
+		tf_subject.setText("COMP");
+		//clickOn("#tabAllSubject");
+		clickOn("#buttonAllSubject");
+		sleep(5000);
+		ta = (TextArea)s.lookup("#textAreaConsole");
+		assertTrue(!ta.getText().trim().isEmpty());
+		
+		//clickOn("#tabMain");
+		tf_url.setText("https://w5.ab.ust.hk/wcq/cgi-bin/");
+		tf_term.setText("1850");
+		tf_subject.setText("COMP");
+		//clickOn("#tabAllSubject");
+		clickOn("#buttonAllSubject");
+		sleep(5000);
+		ta = (TextArea)s.lookup("#textAreaConsole");
+		assertTrue(!ta.getText().trim().isEmpty());
+		
+		//clickOn("#tabMain");
+		tf_url.setText("https://w5.ab.ust.hk/wcq/cgi-bin/");
+		tf_term.setText("1830");
+		tf_subject.setText("ABCD");
+		//clickOn("#tabAllSubject");
+		clickOn("#buttonAllSubject");
+		sleep(5000);
+		ta = (TextArea)s.lookup("#textAreaConsole");
+		assertTrue(!ta.getText().trim().isEmpty());
+		//assertTrue(ta.getText().substring(0, 39)=="Total Number of Categories/Code Prefix: ");
+	}
+	
+	@Test
+	public void testShowTable() {
+		
+		clickOn("#tabMain");
+		TextField tf_url = (TextField) s.lookup("#textfieldURL");
+		tf_url.setText("https://w5.ab.ust.hk/wcq/cgi-bin/");
+		TextField tf_term = (TextField) s.lookup("#textfieldTerm");
+		tf_term.setText("1830");
+		TextField tf_subject = (TextField) s.lookup("#textfieldSubject");
+		tf_subject.setText("COMP");
+		clickOn("#buttonSearch");
+		sleep(5000);
+		TextArea ta = (TextArea)s.lookup("#textAreaConsole");
+		
+		clickOn("#tabFilter");
+		clickOn("#filterSelectAll");
+		clickOn("#filterSelectAll");
+		
+		clickOn("#tabList");
+		
+		clickOn("#tabTimetable");
+		
+	}
+	
 }
