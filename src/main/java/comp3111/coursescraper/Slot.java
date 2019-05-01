@@ -31,6 +31,7 @@ public class Slot {
 	private String venue;
 	/**
      * the label of this slot in tab time table
+     * @author zxiaac
      */
 	public Label la = null;
 	/**
@@ -46,6 +47,7 @@ public class Slot {
 			DAYS_MAP.put(DAYS[i], i);
 	}
 	/**
+	 * clone the slot
 	 * overrides Object.clone() function
 	 * @return a clone of itself
 	 */
@@ -59,7 +61,7 @@ public class Slot {
 		return s;
 	}
 	/**
-	 * 
+	 * if the slot is the same as another slot
 	 * @param s compare the current slot to another to check if they equals or not
 	 * @return equal or not
 	 */
@@ -68,66 +70,77 @@ public class Slot {
 		return false;
 	}
 	/**
+	 * a string of this slot
 	 * @return abstract class information to string
 	 */
 	public String toString() {
 		return DAYS[day] + " " + start.toString() + "-" + end.toString() + ":" + venue;
 	}
 	/**
+	 * get start hour of this slot
 	 * @return slot start hour
 	 */
 	public int getStartHour() {
 		return start.getHour();
 	}
 	/**
+	 * get start minutes of this slot
 	 * @return slot start minute
 	 */
 	public int getStartMinute() {
 		return start.getMinute();
 	}
 	/**
+	 * get end hour
 	 * @return slot end hour
 	 */
 	public int getEndHour() {
 		return end.getHour();
 	}
 	/**
+	 * get end minutes
 	 * @return slot end minute
 	 */
 	public int getEndMinute() {
 		return end.getMinute();
 	}
 	/**
+	 * get start time
 	 * @return the start
 	 */
 	public LocalTime getStart() {
 		return start;
 	}
 	/**
+	 * set start time
 	 * @param start the start to set
 	 */
 	public void setStart(String start) {
 		this.start = LocalTime.parse(start, DateTimeFormatter.ofPattern("hh:mma", Locale.US));
 	}
 	/**
+	 * get end time
 	 * @return the end
 	 */
 	public LocalTime getEnd() {
 		return end;
 	}
 	/**
+	 * set end time
 	 * @param end the end to set
 	 */
 	public void setEnd(String end) {
 		this.end = LocalTime.parse(end, DateTimeFormatter.ofPattern("hh:mma", Locale.US));
 	}
 	/**
+	 * get the venue
 	 * @return the venue
 	 */
 	public String getVenue() {
 		return venue;
 	}
 	/**
+	 * set the venue
 	 * @param venue the venue to set
 	 */
 	public void setVenue(String venue) {
@@ -135,12 +148,14 @@ public class Slot {
 	}
 
 	/**
+	 * get the day
 	 * @return the day
 	 */
 	public int getDay() {
 		return day;
 	}
 	/**
+	 * set the day
 	 * @param day the day to set
 	 */
 	public void setDay(int day) {

@@ -53,6 +53,7 @@ public class Section {
 	private double secsfq;
 	/**
      * if the section has been drawn on timetable or not
+     * @author zxiaac
      */
 	public boolean draw=false;
 	/**
@@ -88,6 +89,7 @@ public class Section {
 	}
 	/**
 	 * overrides Object.clone() function
+	 * clone this section
 	 * @author Jeff, zxiaac
 	 * @return a clone of itself
 	 */
@@ -105,6 +107,7 @@ public class Section {
 		return s;
 	}
 	/**
+	 * if the section is the same as another section
 	 * @author Jeff
 	 * @param sec compare the current section to another to check if they equals
 	 * @return equal or not
@@ -114,6 +117,7 @@ public class Section {
 		return false;
 	}
 	/**
+	 * the string of this section
 	 * @author Jeff
 	 * @return abstract class information to string
 	 */
@@ -125,6 +129,7 @@ public class Section {
 		return out;
 	}
 	/**
+	 * add slot
 	 * @author Jeff
 	 * @param s new slot to be added to this section
 	 */
@@ -134,6 +139,7 @@ public class Section {
 		slots.add(s.clone());
 	}
 	/**
+	 * get slot i
 	 * @author Jeff
 	 * @param i get the Slot at position i in the array of this section
 	 * @return the Slot at position i in the array of this section
@@ -144,6 +150,7 @@ public class Section {
 		return null;
 	}
 	/**
+	 * get color
 	 * @author zxiaac
 	 * @return the section color, which is randomly assigned when the section is created
 	 */
@@ -151,6 +158,7 @@ public class Section {
 		return c;
 	}
   /**
+   * add instructor
 	 * @author Jeff
 	 * @param i a new instructor to be added to this section
 	 */
@@ -158,6 +166,7 @@ public class Section {
 		instructors.add(i.clone());
 	}
 	/**
+	 * get all the instructors
 	 * @author Jeff
 	 * @return an ArrayList of all instructors that teaches this section
 	 */
@@ -165,6 +174,7 @@ public class Section {
 		return (ArrayList<Instructor>)instructors.clone(); // do we need clone???
 	}
 	/**
+	 * get section id
 	 * @author Jeff
 	 * @return the id
 	 */
@@ -173,6 +183,7 @@ public class Section {
 	}
 
 	/**
+	 * set section id
 	 * @author Jeff
 	 * @param id the id to set
 	 */
@@ -180,6 +191,7 @@ public class Section {
 		this.id = id;
 	}
 	/**
+	 * get section code
 	 * @author Jeff
 	 * @return the code (e.g. L1 / T1 / LA1)
 	 */
@@ -188,6 +200,7 @@ public class Section {
 	}
 
 	/**
+	 * set section code
 	 * @author Jeff
 	 * @param code the code to set
 	 */
@@ -196,6 +209,7 @@ public class Section {
 	}
 
 	/**
+	 * get the number of slots
 	 * @author Jeff
 	 * @return the numSlots
 	 */
@@ -203,6 +217,7 @@ public class Section {
 		return slots.size();
 	}
 	/**
+	 * get course code
 	 * @author Jeff
 	 * @return the course code
 	 */
@@ -210,6 +225,7 @@ public class Section {
 		return courseCode;
 	}
 	/**
+	 * set course name
 	 * @author Jeff
 	 * @param s the course name to be set to the section.
 	 */
@@ -217,6 +233,7 @@ public class Section {
 		courseName = s;
 	}
 	/**
+	 * set course code
 	 * @author Jeff
 	 * @param s the course code to be set to the section.
 	 */
@@ -224,6 +241,7 @@ public class Section {
 		courseCode = s;
 	}
 	/**
+	 * get course name
 	 * @author Jeff
 	 * @return the course name
 	 */

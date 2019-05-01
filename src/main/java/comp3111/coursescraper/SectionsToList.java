@@ -35,6 +35,7 @@ public class SectionsToList {
      */
 	private BooleanProperty enrolled;
 	/**
+	 * default constructor
 	 * @author Jeff
 	 * @param _courseCode course code
 	 * @param _section section code (L1 / LA1 / T1)
@@ -54,6 +55,7 @@ public class SectionsToList {
 		enrolled = new SimpleBooleanProperty(_enrolled);
 	}
 	/**
+	 * constructor with two or more instructors
 	 * @author Jeff
 	 * @param _courseCode course code
 	 * @param _section section code (L1 / LA1 / T1)
@@ -82,6 +84,7 @@ public class SectionsToList {
 		return s;
 	}
 	/**
+	 * get string of this section
 	 * @return abstract class information to string
 	 */
 	public String toString() {
@@ -90,7 +93,7 @@ public class SectionsToList {
 		return s;
 	}
 	/**
-	 * 
+	 * if another section is the same as this one
 	 * @param sectl compare the current SectionsToList to another to check if they equals or not
 	 * @return equal or not
 	 */
@@ -99,6 +102,7 @@ public class SectionsToList {
 		return false;
 	}
 	/**
+	 * get the course code
 	 * @author Jeff
 	 * @return course code in string format
 	 */
@@ -106,6 +110,7 @@ public class SectionsToList {
 		return courseCode.get();
 	}
 	/**
+	 * set the course code
 	 * @author Jeff
 	 * @param s course code to be set
 	 */
@@ -113,6 +118,7 @@ public class SectionsToList {
 		courseCode.set(s);
 	}
 	/**
+	 * get section
 	 * @author Jeff
 	 * @return section code in string format
 	 */
@@ -120,6 +126,7 @@ public class SectionsToList {
 		return section.get();
 	}
 	/**
+	 * set section
 	 * @author Jeff
 	 * @param s section code to be set
 	 */
@@ -127,6 +134,7 @@ public class SectionsToList {
 		section.set(s);
 	}
 	/**
+	 * get the course name
 	 * @author Jeff
 	 * @return course name in string format
 	 */
@@ -134,6 +142,7 @@ public class SectionsToList {
 		return courseName.get();
 	}
 	/**
+	 * set the course name
 	 * @author Jeff
 	 * @param s course name to be set
 	 */
@@ -141,6 +150,7 @@ public class SectionsToList {
 		courseName.set(s);
 	}
 	/**
+	 * get the instructor
 	 * @author Jeff
 	 * @return instructor(s) in string format
 	 */
@@ -148,6 +158,7 @@ public class SectionsToList {
 		return instructor.get();
 	}
 	/**
+	 * set instructor
 	 * @author Jeff
 	 * @param s instructor(s) to be set
 	 */
@@ -155,6 +166,7 @@ public class SectionsToList {
 		instructor.set(s);;
 	}
 	/**
+	 * enroll in this section
 	 * @author Jeff
 	 * @return get enrolled status in boolean format
 	 */
@@ -162,6 +174,7 @@ public class SectionsToList {
 		return enrolled.get();
 	}
 	/**
+	 * set enrolled or not
 	 * @author Jeff
 	 * @param b enrolled status to be set
 	 */
@@ -169,6 +182,7 @@ public class SectionsToList {
 		enrolled.set(b);;
 	}
 	/**
+	 * get course code
 	 * @author Jeff
 	 * @return get course code in StringProperty
 	 */
@@ -176,6 +190,7 @@ public class SectionsToList {
 	    return courseCode;
 	}
 	/**
+	 * get section
 	 * @author Jeff
 	 * @return get section code in StringProperty
 	 */
@@ -183,6 +198,7 @@ public class SectionsToList {
 	    return section;
 	}
 	/**
+	 * get course name
 	 * @author Jeff
 	 * @return get section code in StringProperty
 	 */
@@ -190,6 +206,7 @@ public class SectionsToList {
 	    return courseName;
 	}
 	/**
+	 * get ionstructor
 	 * @author Jeff
 	 * @return get instructor(s) in StringProperty
 	 */
@@ -197,6 +214,7 @@ public class SectionsToList {
 	    return instructor;
 	}
 	/**
+	 * get enrolled or not
 	 * @author Jeff
 	 * @return get enrolled status in BooleanProperty
 	 */
@@ -206,7 +224,7 @@ public class SectionsToList {
 }
 
 /**
- * 
+ * Class sorted sections
  * @author Jeff
  * implements a comparator for ranking purpose in TableView display.
  */
