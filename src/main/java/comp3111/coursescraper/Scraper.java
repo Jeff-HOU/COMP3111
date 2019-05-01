@@ -93,7 +93,8 @@ public class Scraper {
 	private WebClient client;
 
 	/**
-	 * Default Constructor 
+	 * Default Constructor
+	 * @author zzhangcl 
 	 */
 	public Scraper() {
 		client = new WebClient();
@@ -104,7 +105,7 @@ public class Scraper {
      * add a slot to a section
      * 
      * 
-     * @author Ziyue
+     * @author zzhangcl
      * @param e - html element
      * @param sec - section to be added
      * @param secondRow - if the section has second row
