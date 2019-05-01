@@ -2,7 +2,7 @@ package comp3111.coursescraper;
 
 /**
  * Class created to store instructor information.
- * @author Jeff, Ziyue
+ * @author Jeff, zzhangcl
  *
  */
 public class Instructor {
@@ -16,12 +16,12 @@ public class Instructor {
 	private double sfq;
 	/**
      * the number of sections the instructor teach
-     * @author Ziyue
+     * @author zzhangcl
      */
 	public int numSection;
 	/**
 	 * standard constructor
-	 * @author Jeff, Ziyue
+	 * @author Jeff, zzhangcl
 	 * 
 	 */
 	public Instructor() {
@@ -31,7 +31,7 @@ public class Instructor {
 	}
 	/**
 	 * the instructors
-	 * @author Jeff, Ziyue
+	 * @author Jeff, zzhangcl
 	 * @param s constructor from instructor name: s
 	 */
 	public Instructor(String s) {
@@ -66,7 +66,7 @@ public class Instructor {
 	/**get the name of the instructor
 	 * @return abstract class information to string
 	 * 
-	 * @author Jeff, Ziyue
+	 * @author Jeff, zzhangcl
 	 */
 	public String toString() {
 		return name;
@@ -91,7 +91,7 @@ public class Instructor {
      * set the sfq value for the instructor
      * 
      *
-     * @author Ziyue
+     * @author zzhangcl
      * @param sfq the sfq value to be set
 
      */
@@ -102,7 +102,7 @@ public class Instructor {
      * get the sfq value for the instructor
      * 
      * @return value of course sfq (double type)
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
 	public double getSfq() {
@@ -112,7 +112,7 @@ public class Instructor {
      * get the number of sections does the instructor teach
      * 
      * @return number of how many section does the instructor teach (int type)
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
 	public int getNumSection() {

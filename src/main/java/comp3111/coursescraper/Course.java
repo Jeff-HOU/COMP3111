@@ -5,7 +5,7 @@ import java.util.Vector;
 
 /**
  * Class created to store all courses scraped.
- * @author Jeff, Ziyue
+ * @author Jeff, zzhangcl
  *
  */
 public class Course {	
@@ -41,7 +41,7 @@ public class Course {
 	private boolean noexclusion; // No exclusion
     /**
      * a list of sections that belongs to the course 
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
 	
@@ -50,7 +50,7 @@ public class Course {
      * the sfq for the course
      * 
      * 
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
 	private double sfq;
@@ -58,14 +58,14 @@ public class Course {
      * a list of sections that belongs to the course
      * 
      * 
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
 	private String courseCode;
     /**
      * set the course code for the course
      * 
-     * @author Ziyue
+     * @author zzhangcl
      * @param s the course code
      */
 
@@ -78,7 +78,7 @@ public class Course {
      * set the sfq for the course
      * 
      * @param sfq: the sfq value to set
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
   	public void setSfq(Double sfq)
@@ -90,7 +90,7 @@ public class Course {
      * get the course code for the course
      * 
      * @return string type course code
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
 
@@ -101,7 +101,7 @@ public class Course {
      * get the sfq value for the course
      * 
      * @return value of course sfq (double type)
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
 	public double getSfq() {
@@ -110,7 +110,7 @@ public class Course {
 	
 	/**
 	 * all the courses
-	 * @author Jeff, Ziyue
+	 * @author Jeff, zzhangcl
 	 */
 	public Course() {
 		sections = new ArrayList<Section>();
@@ -127,7 +127,7 @@ public class Course {
      * 
      * @return true for has the section, false for don't have (boolean type)
      * @param s Section to be checked whether is in the course
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
 	public boolean hasSection(Section s)
@@ -161,7 +161,7 @@ public class Course {
 
 	/** get the title of the course
 	 * @return the title
-	 * @author Jeff, Ziyue
+	 * @author Jeff, zzhangcl
 	 */
 	public String getTitle() {
 		return title;
@@ -170,14 +170,14 @@ public class Course {
 	/** set the title of the course
 	 * 
 	 * @param title: the title to set
-	 * @author Jeff, Ziyue
+	 * @author Jeff, zzhangcl
 	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 	
 	/** get the description for the course
-	 * @author Jeff, Ziyue
+	 * @author Jeff, zzhangcl
 	 * @return the description
 	 */
 	public String getDescription() {
@@ -185,7 +185,7 @@ public class Course {
 	}
 
 	/** set the description for the course
-	 * @author Jeff, Ziyue
+	 * @author Jeff, zzhangcl
 	 * @param description the description to set
 	 */
 	public void setDescription(String description) {
@@ -194,7 +194,7 @@ public class Course {
 
 	/** get exclusion for the course
 	 * @return the exclusion
-	 * @author Jeff, Ziyue
+	 * @author Jeff, zzhangcl
 	 */
 	public String getExclusion() {
 		return exclusion;
@@ -202,7 +202,7 @@ public class Course {
 
 	/** set the exclusive course for the course
 	 * @param exclusion the exclusion to set
-	 * @author Jeff, Ziyue
+	 * @author Jeff, zzhangcl
 	 */
 	public void setExclusion(String exclusion) {
 		this.exclusion = exclusion;
@@ -211,14 +211,14 @@ public class Course {
 	
 	/** get the total number of Sections for the course
 	 * @return the NumSections
-	 * @author Jeff. Ziyue
+	 * @author Jeff. zzhangcl
 	 */
 	public int getNumSections() {
 		return sections.size();
 	}
 	/**
 	 * set if is common core
-	 * @author Jeff,Ziyue
+	 * @author Jeff,zzhangcl
 	 * @param b Common Core - 4Y attribute to be set
 	 */
 	public void setcc4y(boolean b) {
@@ -226,7 +226,7 @@ public class Course {
 	}
 	/**
 	 * get common core
-	 * @author Jeff,Ziyue
+	 * @author Jeff,zzhangcl
 	 * @return If this is a Common Core - 4Y
 	 */
 	public boolean getcc4y() {
@@ -234,7 +234,7 @@ public class Course {
 	}
 	/**
 	 * set if has lab or tutorial
-	 * @author Jeff,Ziyue
+	 * @author Jeff,zzhangcl
 	 * @param b "Has a tutorial / lab section" attribute to be set
 	 */
 	public void settla(boolean b) {
@@ -266,7 +266,7 @@ public class Course {
 	}
 	/**
 	 * get sections that slot on day i
-	 * @author Jeff,Ziyue
+	 * @author Jeff,zzhangcl
 	 * @param day get all Sections that have slots on "day"
 	 * @return get all Sections that have slots on "day"
 	 */
@@ -285,7 +285,7 @@ public class Course {
 	}
 	/**
 	 * get sections that have AM slot
-	 * @author Jeff,Ziyue
+	 * @author Jeff,zzhangcl
 	 * @return get all sections that have an AM slot
 	 */
 	public Vector<Section> getSectionsThatHaveAMSlots(){ // wait ta's response???
@@ -323,7 +323,7 @@ public class Course {
      * get all the sections for the course
      * 
      * @return a vector of all the sections for the course
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
 	public Vector<Section> getAllSections(){ // wait ta's response???

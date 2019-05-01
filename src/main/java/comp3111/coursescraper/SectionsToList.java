@@ -76,6 +76,7 @@ public class SectionsToList {
 	}
 	/**
 	 * overrides Object.clone() function
+	 * @author Jeff
 	 * @return a clone of itself
 	 */
 	@Override
@@ -85,6 +86,7 @@ public class SectionsToList {
 	}
 	/**
 	 * get string of this section
+	 * @author Jeff
 	 * @return abstract class information to string
 	 */
 	public String toString() {

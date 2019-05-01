@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 
 /**
  * Section class to store sections of a course.
- * @author Jeff, Ziyue, zxiaac
+ * @author Jeff, zzhangcl, zxiaac
  *
  */
 public class Section {
@@ -72,7 +72,7 @@ public class Section {
      * get the sfq value for the section
      * 
      * @return value of section sfq (double type)
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
 	public double getSecSfq() {
@@ -80,7 +80,7 @@ public class Section {
 	}
 	 /**
      * set the sfq value for the course
-     * @author Ziyue
+     * @author zzhangcl
      * @param sfq the value of sfq
      *
      */

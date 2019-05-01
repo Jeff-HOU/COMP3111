@@ -36,10 +36,13 @@ public class Slot {
 	public Label la = null;
 	/**
      * all the days in a week may has slots
+     * @author zzhangcl
+     * 
      */
 	public static final String DAYS[] = {"Mo", "Tu", "We", "Th", "Fr", "Sa"};
 	/**
      * a hash table store all the days
+     * @author Jeff
      */
 	public static final Map<String, Integer> DAYS_MAP = new HashMap<String, Integer>();
 	static {
@@ -50,6 +53,7 @@ public class Slot {
 	 * clone the slot
 	 * overrides Object.clone() function
 	 * @return a clone of itself
+	 * @author Jeff
 	 */
 	@Override
 	public Slot clone() {
@@ -64,6 +68,7 @@ public class Slot {
 	 * if the slot is the same as another slot
 	 * @param s compare the current slot to another to check if they equals or not
 	 * @return equal or not
+	 * @author Jeff
 	 */
 	public boolean equals(Slot s) {
 		if (s.getDay() == day && s.getStart().equals(start) && s.getEnd().equals(end) && s.getVenue().equals(venue)) return true;
@@ -72,12 +77,14 @@ public class Slot {
 	/**
 	 * a string of this slot
 	 * @return abstract class information to string
+	 * @author Jeff
 	 */
 	public String toString() {
 		return DAYS[day] + " " + start.toString() + "-" + end.toString() + ":" + venue;
 	}
 	/**
 	 * get start hour of this slot
+	 * @author zzhangcl
 	 * @return slot start hour
 	 */
 	public int getStartHour() {
@@ -85,6 +92,7 @@ public class Slot {
 	}
 	/**
 	 * get start minutes of this slot
+	 * @author zzhangcl
 	 * @return slot start minute
 	 */
 	public int getStartMinute() {
@@ -92,6 +100,7 @@ public class Slot {
 	}
 	/**
 	 * get end hour
+	 * @author zzhangcl
 	 * @return slot end hour
 	 */
 	public int getEndHour() {
@@ -99,6 +108,7 @@ public class Slot {
 	}
 	/**
 	 * get end minutes
+	 * @author zzhangcl
 	 * @return slot end minute
 	 */
 	public int getEndMinute() {
@@ -106,6 +116,7 @@ public class Slot {
 	}
 	/**
 	 * get start time
+	 * @author zzhangcl
 	 * @return the start
 	 */
 	public LocalTime getStart() {
@@ -113,6 +124,7 @@ public class Slot {
 	}
 	/**
 	 * set start time
+	 * @author zzhangcl
 	 * @param start the start to set
 	 */
 	public void setStart(String start) {
@@ -120,6 +132,7 @@ public class Slot {
 	}
 	/**
 	 * get end time
+	 * @author zzhangcl
 	 * @return the end
 	 */
 	public LocalTime getEnd() {
@@ -127,6 +140,7 @@ public class Slot {
 	}
 	/**
 	 * set end time
+	 * @author zzhangcl
 	 * @param end the end to set
 	 */
 	public void setEnd(String end) {
@@ -134,6 +148,7 @@ public class Slot {
 	}
 	/**
 	 * get the venue
+	 * @author Jeff
 	 * @return the venue
 	 */
 	public String getVenue() {
@@ -141,6 +156,7 @@ public class Slot {
 	}
 	/**
 	 * set the venue
+	 * @author zzhangcl
 	 * @param venue the venue to set
 	 */
 	public void setVenue(String venue) {
@@ -149,6 +165,7 @@ public class Slot {
 
 	/**
 	 * get the day
+	 * @author zzhangcl
 	 * @return the day
 	 */
 	public int getDay() {
@@ -156,6 +173,7 @@ public class Slot {
 	}
 	/**
 	 * set the day
+	 * @author zzhangcl
 	 * @param day the day to set
 	 */
 	public void setDay(int day) {

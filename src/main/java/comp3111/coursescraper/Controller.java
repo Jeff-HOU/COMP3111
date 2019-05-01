@@ -81,7 +81,7 @@ import java.net.UnknownHostException;
 
 /**
  * Main UI and function controller.
- * @author Jeff, zxiaac
+ * @author Jeff, zxiaac, zzhangcl
  *
  */
 public class Controller {
@@ -218,7 +218,7 @@ public class Controller {
      * This function is used to select certain attribute of a course 
      * 
      * @return no return value
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
     void selectCourse() {
@@ -462,7 +462,7 @@ public class Controller {
      * This function is used to support the selectAll button and when click the button all the features will be selected
      * 
      * @return no return value
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
     void selectAll() {
@@ -705,7 +705,7 @@ public class Controller {
      * This function is used to scrape and calculate the value of certain instructor's average sfq
      * 
      * @return no return value
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
     @FXML
@@ -790,7 +790,7 @@ public class Controller {
      * This function is used to scrape and calculate the value of sfq for enrolled courses
      * 
      * @return no return value
-     * @author Ziyue
+     * @author zzhangcl
      *
      */
     void findSfqEnrollCourse() {
