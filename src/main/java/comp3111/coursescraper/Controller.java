@@ -86,7 +86,9 @@ import java.net.UnknownHostException;
  */
 public class Controller {
 	/**
+	 * 
      * if the tabAllSubjectSearch is clicked for the first time
+     * 
      */
 	private boolean first=true;
 	/**

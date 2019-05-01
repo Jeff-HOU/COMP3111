@@ -109,6 +109,7 @@ public class Course {
 	}
 	
 	/**
+	 * all the courses
 	 * @author Jeff, Ziyue
 	 */
 	public Course() {
@@ -140,14 +141,14 @@ public class Course {
 	}
 	return false;
 	}
-	/**
+	/**add section to course 
 	 * @author Jeff
 	 * @param s Section to be added
 	 */
 	public void addSection(Section s) {
 		sections.add(s.clone());
 	}
-	/**
+	/**get the section
 	 * @author Jeff
 	 * @param i get the Section at position i in the array of this Course
 	 * @return Section at position i in the array of this Course
@@ -216,27 +217,31 @@ public class Course {
 		return sections.size();
 	}
 	/**
-	 * @author Jeff
+	 * set if is common core
+	 * @author Jeff,Ziyue
 	 * @param b Common Core - 4Y attribute to be set
 	 */
 	public void setcc4y(boolean b) {
 		cc4y = b;
 	}
 	/**
-	 * @author Jeff
+	 * get common core
+	 * @author Jeff,Ziyue
 	 * @return If this is a Common Core - 4Y
 	 */
 	public boolean getcc4y() {
 		return cc4y;
 	}
 	/**
-	 * @author Jeff
+	 * set if has lab or tutorial
+	 * @author Jeff,Ziyue
 	 * @param b "Has a tutorial / lab section" attribute to be set
 	 */
 	public void settla(boolean b) {
 		tla = b;
 	}
 	/**
+	 * get if has lab or tutorial
 	 * @author Jeff
 	 * @return "Has a tutorial / lab section" attribute
 	 */
@@ -244,6 +249,7 @@ public class Course {
 		return tla;
 	}
 	/**
+	 * set if has no exclusion
 	 * @author Jeff
 	 * @param b "Has no exclusions" attribute to be set
 	 */
@@ -251,6 +257,7 @@ public class Course {
 		noexclusion = b;
 	}
 	/**
+	 * get if has no exclusion
 	 * @author Jeff
 	 * @return "Has no exclusions" attribute
 	 */
@@ -258,7 +265,8 @@ public class Course {
 		return noexclusion;
 	}
 	/**
-	 * @author Jeff
+	 * get sections that slot on day i
+	 * @author Jeff,Ziyue
 	 * @param day get all Sections that have slots on "day"
 	 * @return get all Sections that have slots on "day"
 	 */
@@ -276,7 +284,8 @@ public class Course {
 		return selected;
 	}
 	/**
-	 * @author Jeff
+	 * get sections that have AM slot
+	 * @author Jeff,Ziyue
 	 * @return get all sections that have an AM slot
 	 */
 	public Vector<Section> getSectionsThatHaveAMSlots(){ // wait ta's response???
@@ -293,6 +302,7 @@ public class Course {
 		return selected;
 	}
 	/**
+	 * get sections that has PM slots
 	 * @author Jeff
 	 * @return get all sections that have an PM slot
 	 */
@@ -309,7 +319,7 @@ public class Course {
 		}
 		return selected;
 	}
-	   /**
+	 /**
      * get all the sections for the course
      * 
      * @return a vector of all the sections for the course
@@ -327,6 +337,7 @@ public class Course {
 		return selected;
 	}
 	/**
+	 * get sections that have am and pm slots
 	 * @author Jeff
 	 * @return get sections that have both AM and PM slots
 	 */

@@ -54,6 +54,7 @@ public class MyApplication extends Application {
 	 * The main entry point for all JavaFX applications. 
 	 * @param stage - the primary stage for this application, onto whichthe application scene can be set. The primary stage will be embedded inthe browser if the application was launched as an applet.Applications may create other stages, if needed, but they will not beprimary stages and will not be embedded in the browser.
 	 * @throws Exception the exception
+	 * @author Kevin
 	 */
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -71,6 +72,7 @@ public class MyApplication extends Application {
 	/**
 	 * Entry point of the program. No argument should be supplied
 	 * @param args - not used.
+	 * @author Kevin
 	 */
 	public static void main(String args[]) {
 		Application.launch(args);

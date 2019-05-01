@@ -16,11 +16,13 @@ public class Instructor {
 	private double sfq;
 	/**
      * the number of sections the instructor teach
+     * @author Ziyue
      */
 	public int numSection;
 	/**
-	 * @author Jeff, Ziyue
 	 * standard constructor
+	 * @author Jeff, Ziyue
+	 * 
 	 */
 	public Instructor() {
 		name = "";
@@ -28,6 +30,7 @@ public class Instructor {
 		numSection=1;
 	}
 	/**
+	 * the instructors
 	 * @author Jeff, Ziyue
 	 * @param s constructor from instructor name: s
 	 */
@@ -38,6 +41,7 @@ public class Instructor {
 	}
 	/**
 	 * overrides Object.clone() function
+	 * @author Jeff
 	 * @return a clone of itself
 	 */
 	@Override
@@ -49,6 +53,7 @@ public class Instructor {
 		return i;
 	}
 	/**
+	 * if the 2 object equals
 	 * @author Jeff
 	 * @param i compare the current Instructor to another to check if they equals or not
 	 * @return equal or not based on their names
@@ -67,6 +72,7 @@ public class Instructor {
 		return name;
 	}
 	/**
+	 * set the name of instructor
 	 * @author Jeff
 	 * @param name instructor name to set
 	 */
@@ -74,6 +80,7 @@ public class Instructor {
 		this.name = name;
 	}
 	/**
+	 * get the instructor's name
 	 * @author Jeff
 	 * @return instructor's name
 	 */
