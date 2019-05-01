@@ -13,12 +13,33 @@ import javafx.scene.control.Label;
  *
  */
 public class Slot {
+	/**
+     * the day the slot belongs to
+     */
 	private int day;
+	/**
+     * the starttime of the slot
+     */
 	private LocalTime start;
+	/**
+     * the end time of the slot
+     */
 	private LocalTime end;
+	/**
+     * the venue of the slot
+     */
 	private String venue;
+	/**
+     * the label of this slot in tab time table
+     */
 	public Label la = null;
+	/**
+     * all the days in a week may has slots
+     */
 	public static final String DAYS[] = {"Mo", "Tu", "We", "Th", "Fr", "Sa"};
+	/**
+     * a hash table store all the days
+     */
 	public static final Map<String, Integer> DAYS_MAP = new HashMap<String, Integer>();
 	static {
 		for (int i = 0; i < DAYS.length; i++)

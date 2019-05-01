@@ -97,66 +97,110 @@ public class Controller {
      * the number of all courses
      */
 	private int totalcourse = 0;
+	/**
+     * the tab of the main page
+     */
     @FXML
     private Tab tabMain;
-
+    /**
+     * the textfield for term
+     */
     @FXML
     private TextField textfieldTerm;
-
+    /**
+     * the text field for subject
+     */
     @FXML
     private TextField textfieldSubject;
-
+    /**
+     * the button for search
+     */
     @FXML
     private Button buttonSearch;
-
+    /**
+     * the text field for url
+     */
     @FXML
     private TextField textfieldURL;
-
+    /**
+     * the tab of the statistic page
+     */
     @FXML
     private Tab tabStatistic;
-
+    /**
+     * the time slot combo box
+     */
     @FXML
     private ComboBox<?> comboboxTimeSlot;
-
+    /**
+     * the tab for filter page
+     */
     @FXML
     private Tab tabFilter;
-
+    /**
+     * the tab for list page
+     */
     @FXML
     private Tab tabList;
-
+    /**
+     * the tab for time table page
+     */
     @FXML
     private Tab tabTimetable;
-
+    /**
+     * the tab for all subject search page
+     */
     @FXML
     private Tab tabAllSubject;
-
+    /**
+     * the progress bar
+     */
     @FXML
     private ProgressBar progressbar;
-
+    /**
+     * the text field for sfq url
+     */
     @FXML
     private TextField textfieldSfqUrl;
-
+    /**
+     * the button for searching sfq of enrolled courses
+     */
     @FXML
     private Button buttonSfqEnrollCourse;
-
+    /**
+     * the button for instructor sfq searching
+     */
     @FXML
     private Button buttonInstructorSfq;
-
+    /**
+     * the text area for console
+     */
     @FXML
     private TextArea textAreaConsole;
-    
+    /**
+     * the scraper
+     */
     private Scraper scraper = new Scraper();
     
     /**
      * all the courses
      */
     private Vector<Course> course = new Vector<Course>();
+    /**
+     * the hash table store all the filter check boxes
+     */
     private HashMap<String, Boolean> filterCheckBox = new HashMap<String, Boolean>();
+    /**
+     * all the filter check boxes' names
+     */
     private static String[] filterCheckBoxName = {
     		"#filterMON", "#filterTUE", "#filterWED", "#filterTHU", "#filterFRI", "#filterSAT",
     		"#filterAM", "#filterPM",
     		"#filterCCC", "#filterNOEx", "#filterTLA"
     };
+    /**
+     * all the selected sections
+     */
     private Vector<Section> selectedSection = new Vector<Section>();
     /**
      * all the sections
@@ -439,11 +483,14 @@ public class Controller {
 
     
     /**
-     * multi-thread Class inherited thread class to update progress bar.
+     * Class multi-thread Class inherited thread class to update progress bar.
      * @author zxiaac
      *
      */
     class BarThread extends Thread {
+    	 /**
+         * the progress bar
+         */
     	  ProgressBar progressBar;
     	  /**
     	   * @param the progress bar to be updated

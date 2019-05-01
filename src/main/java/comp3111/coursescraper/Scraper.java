@@ -87,6 +87,9 @@ import java.util.Vector;
  *
  */
 public class Scraper {
+	/**
+     * the web client
+     */
 	private WebClient client;
 
 	/**
@@ -102,6 +105,9 @@ public class Scraper {
      * 
      * 
      * @author Ziyue
+     * @param e - html element
+     * @param sec - section to be added
+     * @param secondRow - if the section has second row
      *
      */
 	

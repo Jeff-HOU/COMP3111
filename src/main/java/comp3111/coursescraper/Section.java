@@ -11,17 +11,54 @@ import javafx.scene.control.Label;
  *
  */
 public class Section {
+	/**
+     * the number of max slots
+     */
 	private static final int DEFAULT_MAX_SLOT = 3;
+	/**
+     * the number of max instructors
+     */
 	private static final int DEFAULT_MAX_INS = 20;
+	/**
+     * the course code
+     */
 	private String courseCode;
+	/**
+     * the course name
+     */
 	private String courseName;
+	/**
+     * the section id
+     */
 	private String id; // 1809
+	/**
+     * the section code
+     */
 	private String code; //L1 LA1 T1
+	/**
+     * all the slots belongs to the section
+     */
 	private ArrayList<Slot> slots;
+	/**
+     * the color to be displayed in timetable
+     */
 	private Color c;
+	/**
+     * all the instructors
+     */
 	private ArrayList<Instructor> instructors;
+	/**
+     * the sfq of this section
+     */
 	private double secsfq;
+	/**
+     * if the section has been drawn on timetable or not
+     */
 	public boolean draw=false;
+	/**
+     * constructor for section, assign a random color to it
+     * @author zxiaac
+     */
 	public Section() {
 		Random r = new Random();
 		c = Color.color((double)r.nextInt(Integer.MAX_VALUE)/(Integer.MAX_VALUE-1), (double)r.nextInt(Integer.MAX_VALUE)/(Integer.MAX_VALUE-1), (double)r.nextInt(Integer.MAX_VALUE)/(Integer.MAX_VALUE-1),0.5);

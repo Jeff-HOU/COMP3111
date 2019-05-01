@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 
 
 /**
+ * The entry point of the entire program.
  * @author kevinw
  * 
  * The entry point of the entire program. It is quite unlikely you need to change this file. But you can change it if you want :)
@@ -37,6 +38,10 @@ import javafx.scene.Scene;
  * 
  */
 public class MyApplication extends Application {
+	
+	/**
+     * the ui file used in this application
+     */
 
     private static final String UI_FILE = "/ui.fxml";  //It is very important that you put the file under folder src/main/resources/
 	
@@ -44,6 +49,11 @@ public class MyApplication extends Application {
 	 * @see javafx.application.Application#start(javafx.stage.Stage)
 	 * 
 	 * This function will be called by the framework shortly after the program started. You are not required to touch any part of this.
+	 */
+    /**
+	 * The main entry point for all JavaFX applications. 
+	 * @param stage - the primary stage for this application, onto whichthe application scene can be set. The primary stage will be embedded inthe browser if the application was launched as an applet.Applications may create other stages, if needed, but they will not beprimary stages and will not be embedded in the browser.
+	 * @throws Exception the exception
 	 */
 	@Override
 	public void start(Stage stage) throws Exception {

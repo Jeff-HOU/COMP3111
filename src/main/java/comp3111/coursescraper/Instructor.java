@@ -6,8 +6,17 @@ package comp3111.coursescraper;
  *
  */
 public class Instructor {
+	/**
+     * the instructor name
+     */
 	private String name;
+	/**
+     * the sfq of the instructor
+     */
 	private double sfq;
+	/**
+     * the number of sections the instructor teach
+     */
 	public int numSection;
 	/**
 	 * @author Jeff, Ziyue

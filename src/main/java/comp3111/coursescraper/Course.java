@@ -9,7 +9,15 @@ import java.util.Vector;
  *
  */
 public class Course {	
+	/**
+	 * @author zxiaac
+     * the name of the course
+     */
 	private String title ; 
+	/**
+	 * @author zxiaac
+     * the description of the course
+     */
 	private String description ;
 	/**
 	 * @author Jeff
@@ -32,9 +40,7 @@ public class Course {
 	 */
 	private boolean noexclusion; // No exclusion
     /**
-     * a list of sections that belongs to the course
-     * 
-     * 
+     * a list of sections that belongs to the course 
      * @author Ziyue
      *
      */

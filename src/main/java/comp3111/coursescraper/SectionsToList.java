@@ -14,10 +14,25 @@ import javafx.beans.property.StringProperty;
  * @author Jeff
  */
 public class SectionsToList {
+	/**
+     * course code of the section
+     */
 	private StringProperty courseCode;
+	/**
+     * the section code
+     */
 	private StringProperty section;
+	/**
+     * the course name
+     */
 	private StringProperty courseName;
+	/**
+     * the instructor
+     */
 	private StringProperty instructor;
+	/**
+     * if the section enrolled or not
+     */
 	private BooleanProperty enrolled;
 	/**
 	 * @author Jeff
